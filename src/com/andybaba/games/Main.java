@@ -8,6 +8,6 @@ public class Main {
 		Hand hand = new Hand(3);
 		
 		hand.addCard(new Card());
-		System.out.println(new Card());
+		System.out.println(hand);
 	}
 }

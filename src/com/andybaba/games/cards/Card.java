@@ -14,7 +14,6 @@ import java.util.Random;
  * @author Andy
  *
  */
-
 public class Card {
 
 	/**

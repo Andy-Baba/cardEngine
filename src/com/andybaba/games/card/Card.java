@@ -1,4 +1,4 @@
-package com.andybaba.games.cards;
+package com.andybaba.games.card;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A base class for playing cards. It also contains two public <i>enums</i> for
- * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
+ * <h1>Card Class</h1> <p>A base class for playing cards. It also contains two
+ * public <i>enums</i> for <b>{@link Suite}</b> and <b>{@link Rank}</b> of the
+ * cards.
  * 
  * @version 0.5.0
  * @since Dec 10 2018
@@ -102,7 +103,20 @@ public class Card {
 		this(Rank.random(), Suite.random());
 	}
 
+	/**
+	 * Gets the <b>value</b> of the card
+	 * 
+	 * @return value of the card
+	 */
 	public int getValue() {
 		return this.value;
+	}
+
+	/**
+	 * @return The text form of the card
+	 */
+	@Override
+	public String toString() {
+		return this.rank + " of " + this.suite;
 	}
 }

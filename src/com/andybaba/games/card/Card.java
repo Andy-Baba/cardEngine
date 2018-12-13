@@ -6,18 +6,17 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <h1>Class Card:</h1><p>A base class for playing cards. It also contains two
- * public <i>enums</i> for <b>{@link Suite}</b> and <b>{@link Rank}</b> of the
- * cards.
+ * <h1>Class Card:</h1>
+ * <p>
+ * A base class for playing cards. It also contains two public <i>enums</i> for
+ * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
  * 
  * @version 0.6.0
  * @since Dec 10 2018
  * @author Andy
  * @see Comparable
  */
-
-
-public class Card implements Comparable<Card>{
+public class Card implements Comparable<Card> {
 
 	/**
 	 * A public <b>enum</b> to address the <b>Suite</b> of the cards. The value of

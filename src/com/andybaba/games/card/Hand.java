@@ -1,7 +1,5 @@
 package com.andybaba.games.card;
 
-
-
 /**
  * Interface for hand, it is expected that the class implementing this interface
  * should create a hand with a specific number of slots for <b>{@code Card}s</b>
@@ -29,9 +27,11 @@ public interface Hand extends Iterable<Card> {
 	}
 
 	/**
-	 * Randomize the hand with
+	 * Fill the hand with randomized cards
+	 * 
+	 * @throws UnsupportedOperationException If the hand is already full
 	 */
-	public void randomize();
+	public void randomize() throws UnsupportedOperationException;
 
 	/**
 	 * Adds a specific number of random <b>{@link Card}s</b> to the hand
@@ -39,8 +39,12 @@ public interface Hand extends Iterable<Card> {
 	 * @param count The number of cards to be randomize and added to a hand
 	 * @throws ArrayIndexOutOfBoundsException If the <b>count</b> is more than
 	 *                                        remaining slots in a hand
+	 * @throws UnsupportedOperationException  If the hand is already full
+	 * @throws IllegalArgumentException       If the <i>count</i> is a negative
+	 *                                        value
 	 */
-	public void randomize(int count) throws ArrayIndexOutOfBoundsException;
+	public void randomize(int count)
+			throws ArrayIndexOutOfBoundsException, IllegalArgumentException, UnsupportedOperationException;
 
 	/**
 	 * Adds the given card to the hand
@@ -71,8 +75,8 @@ public interface Hand extends Iterable<Card> {
 	public Card remove(int index) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	 * Checks if the hand contains a given
-	 * <b>{@link Card}</b>. It returns <b>true</b> at its first occurrence
+	 * Checks if the hand contains a given <b>{@link Card}</b>. It returns
+	 * <b>true</b> at its first occurrence
 	 * 
 	 * @param card The <i>Card</i> to look for
 	 * 

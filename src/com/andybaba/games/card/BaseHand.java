@@ -29,8 +29,8 @@ public class BaseHand implements Hand {
 	 * <p>
 	 * <b>Default:</b> system.lineSperator()
 	 */
-	public static String DELIMITER;
-	public final int MAX_CARDS;
+	public static String DELIMIER;
+	private final int MAX_CARDS;
 	private final Hand.Duplicates acceptDuplicate;
 	private int hasDuplicate;
 
@@ -44,14 +44,14 @@ public class BaseHand implements Hand {
 	 *                                  value.
 	 */
 	public BaseHand(int maxCards, Duplicates acceptDuplicate) throws IllegalArgumentException {
-		DELIMITER = System.lineSeparator();
+		DELIMIER = System.lineSeparator();
 		hasDuplicate = 0;
 		if (maxCards <= 0) {
 			throw new IllegalArgumentException("A hand cannot have " + maxCards + " cards!");
 		}
 		this.acceptDuplicate = acceptDuplicate;
 		this.MAX_CARDS = maxCards;
-		hand = new ArrayList<>(maxCards);
+		hand = new ArrayList<Card>(maxCards);
 	}
 
 	/**
@@ -92,10 +92,13 @@ public class BaseHand implements Hand {
 	}
 
 	@Override
-	public void randomize(int count) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
-		if (count <= 1)
+	public void randomize(int count)
+			throws ArrayIndexOutOfBoundsException, IllegalArgumentException, UnsupportedOperationException {
+		if (count < 0)
 			throw new IllegalArgumentException("The hand cannot generate " + count + " number of cards");
 		int remainingCount = this.MAX_CARDS - this.hand.size();
+		if (remainingCount == 0)
+			throw new UnsupportedOperationException("The hand is already full");
 		if (count > remainingCount)
 			throw new ArrayIndexOutOfBoundsException(
 					"This hand does not have enough space to genreate " + count + " Cards.");
@@ -119,7 +122,7 @@ public class BaseHand implements Hand {
 	 * 
 	 * @see BaseHand
 	 */
-	public void randomize() {
+	public void randomize() throws UnsupportedOperationException {
 		this.randomize(this.MAX_CARDS - this.hand.size());
 	}
 
@@ -136,7 +139,7 @@ public class BaseHand implements Hand {
 	public String toString() {
 		String out = "";
 		for (Card card : hand) {
-			out += card.toString() + BaseHand.DELIMITER;
+			out += card.toString() + BaseHand.DELIMIER;
 		}
 		return out;
 	}
@@ -168,7 +171,8 @@ public class BaseHand implements Hand {
 	 *         current size of the hand
 	 * @return
 	 */
-	public Card showCartAt(int index) throws IndexOutOfBoundsException {
+	@Override
+	public Card show(int index) throws IndexOutOfBoundsException {
 		return hand.get(index);
 	}
 
@@ -193,12 +197,6 @@ public class BaseHand implements Hand {
 	}
 
 	@Override
-	public Card show(int index) throws ArrayIndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Card remove(int index) throws ArrayIndexOutOfBoundsException {
 		// TODO Auto-generated method stub
 		return null;
@@ -212,8 +210,7 @@ public class BaseHand implements Hand {
 
 	@Override
 	public int maxSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.MAX_CARDS;
 	}
 
 }

@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+.content {
+	padding: 30px;
+	align-content: stretch;
+	background-color: #f1f1f1;
+}
+
+.tableOfContent {
+	align-content: center;
+	background-color: #d3d7cf;	
+}

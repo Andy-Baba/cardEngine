@@ -67,34 +67,69 @@
 	content="https://api.github.com/_private/browser/errors">
 
 <meta name="theme-color" content="#1e2327">
+<link rel="stylesheet" href="readMeMDStyle.css" />
 
 </head>
 
 <body class="logged-out env-production page-blob">
 	<h1 id="top">The Card Engine Library</h1>
-	<p>A card engine library (CEL) developed in java for educational
-		(and hopefully research) purposes under GNU license, We will try to
-		release JAR file version after each release is ready. Contribute by
-		creating an account on GitHub Here is the concepts covered in this
-		project so far (it will be updated whenever a new java/programming
-		concept is add to the code).</p>
-	<h3>Table of Concepts:</h3>
-	<ul>
-		<li>Test Driven Development
-			<ol>
-				<li>Junit library</li>
-				<li><a href="doc/com/andybaba/games/card/Hand.html">Using
-						of Interfaces</a></li>
-			</ol>
-		</li>
-		<li>H</li>
+	<p>A Card Engine Library (CEL) developed in java programming
+		language for educational (and hopefully research) purposes under GNU
+		license (including to this read me file). We will try to release a JAR
+		file version after each release is ready. Contribute by creating an
+		account on GitHub Here is the concepts covered in this project so far.</p>
+	<p>
+		<b><i>Note: </i></b>It will be updated whenever a new java/programming
+		concept is add to the code.
+	</p>
+	<div class="tableOfContent">
+		<h3>Table of Concepts:</h3>
+		<ul>
+			<li><a href="#testDrivenDevelopment">Test Driven Development</a>
+				<ol>
+					<li><a href="">Junit library</a></li>
+					<li><a href="doc/com/andybaba/games/card/Hand.html">Using
+							of Interfaces</a></li>
+				</ol></li>
+			<li>H</li>
+		</ul>
+	</div>
+	<hr>
+	<div class="content">
+		<h2 id="testDrivenDevelopment">Test Driven Development</h2>
+		<p>This approach is very useful specially when your code
+			complexity is low to medium, where you can best divide your project
+			to well defined classes and methods to do the jobs for you. So you
+			start by writing a test class for each of your classes and test units
+			for each of your methods, and then you continue by writing your
+			actual code to pass each unit test.</p>
+		<p>The main advantage of this methodology is potentially it will
+			take you to the target of the project in the shortest time possible
+			by forcing you to divide the job at hand to sub targets. The you will
+			have to unitize them by coding test units and then developing your
+			actual program to pass the tests. After you achieve your basic goals
+			you may optimize your code and still run the tests to make sure the
+			code is functional after each edit.</p>
 
-	</ul>
-	<h2 id="testDrivenDevelopment">Test Driven Development</h2>
-	<p>This approach its very useful specially when your code
-		complexity is low to medium, where you can best divide your project to
-		well defined classes and methods to do the jobs for you.</p>
+		<p>
+			I personally found that the approach can be later even improved
+			further by first writing <b>interfaces</b> for your major classes. So
+			to some it up the flow would be:
+		</p>
+		<ol>
+			<li>Divide the project to classes</li>
+			<li>Write interfaces corresponding to each class</li>
+			<li>Write test units for each interface</li>
+			<li>Start coding your actual classes implementing your
+				interfaces to pass all the test units</li>
+			<li>If you have more time, you can polish your code with more
+				deteals and/or increase the performance</li>
+		</ol>
+	</div>
 
+
+
+	<hr>
 	<a href="#top">Back to top</a>
 </body>
 </html>

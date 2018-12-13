@@ -72,8 +72,17 @@
 </head>
 
 <body class="logged-out env-production page-blob">
-	<button onclick="location.href='#top'" id="myBtn" title="Go to top">Top</button>
+
 	<h1 id="top">The Card Engine Library</h1>
+	<h2>About Me</h2>
+	<p>
+		My name is Andy, and I am a software engineer/solution architect. I
+		started coding from a very early age (about 9) on my first PC (equipped with an
+		Intel 80386). You can find me via my <a
+			href="https://ir.linkedin.com/in/andisheh-kanani-108387a9">linkedIn</a>
+		Page
+	</p>
+	<h2>About this Project</h2>
 	<p>A Card Engine Library (CEL) developed in java programming
 		language for educational (and hopefully research) purposes under GNU
 		license (including to this read me file). We will try to release a JAR
@@ -86,18 +95,19 @@
 	<div class="tableOfContent">
 		<h3>Table of Concepts:</h3>
 		<ul>
-			<li><a href="#testDrivenDevelopment">Test Driven Development</a>
+			<li><a href="#ttlTestDrivenDevelopment">Test Driven
+					Development</a>
 				<ol>
 					<li><a href="">Junit library</a></li>
 					<li><a href="doc/com/andybaba/games/card/Hand.html">Using
 							of Interfaces</a></li>
 				</ol></li>
-			<li>H</li>
+			<li><a href="#ttlLogging">Logging</a></li>
 		</ul>
 	</div>
 	<hr>
 	<div class="content">
-		<h2 id="testDrivenDevelopment">Test Driven Development</h2>
+		<h2 id="ttlTestDrivenDevelopment">Test Driven Development</h2>
 		<p>This approach is very useful specially when your code
 			complexity is low to medium, where you can best divide your project
 			to well defined classes and methods to do the jobs for you. So you
@@ -124,14 +134,27 @@
 			<li>Start coding your actual classes implementing your
 				interfaces to pass all the test units</li>
 			<li>If you have more time, you can polish your code with more
-				deteals and/or increase the performance</li>
+				details and/or increase the performance</li>
 		</ol>
+		<p>
+			Also you can use logging in your test classes to track what exactly
+			happening while the test is running. It will highly help you while
+			your are troubleshooting based on your test units. A great example to
+			look at is how the <b>Logger class</b> is used in <a
+				class="codeExample"
+				href="test/com/andybaba/games/card/HandTest.java">Sample Test
+				Class</a>
+		</p>
 	</div>
-
-
-
 	<hr>
-	<a class="toTop" href="#top">Back to top</a>
+	<div id="ttlLogging" class="content">
+		<h2>Logging</h2>
+		<p>One of the best approaches which can help you keep debugging
+			and maintenance of your programs under control is using logging. In
+			the basic level its pretty easy and straightforward.</p>
+	</div>
+	<hr>
+	<a class="toTop" href="#top">Go To Top</a>
 </body>
 </html>
 

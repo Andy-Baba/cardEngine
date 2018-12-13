@@ -72,6 +72,7 @@
 </head>
 
 <body class="logged-out env-production page-blob">
+	<button onclick="location.href='#top'" id="myBtn" title="Go to top">Top</button>
 	<h1 id="top">The Card Engine Library</h1>
 	<p>A Card Engine Library (CEL) developed in java programming
 		language for educational (and hopefully research) purposes under GNU
@@ -130,7 +131,7 @@
 
 
 	<hr>
-	<a href="#top">Back to top</a>
+	<a class="toTop" href="#top">Back to top</a>
 </body>
 </html>
 

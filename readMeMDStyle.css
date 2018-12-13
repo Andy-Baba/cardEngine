@@ -5,15 +5,49 @@ body {
 	font-size: 18px;
 }
 
+code {
+	display: block;
+	font-family: monospace;
+}
+
+textarea {
+	position: relative;
+	left: 5%;
+	background-color: #e9b96e;
+}
+
+p {
+	position: relative;
+	text-align: justify;
+	text-justify: inter-word;
+	left: 5%;
+	width: 90%;
+}
+
+ol {
+	position: relative;
+	left: 5%;
+}
+
 .content {
-	padding: 10px 10px 10px 10px;
-	align-content: space-around;
+	padding: 0 0 0 0;
+	width: 95%;
 	background-color: #f1f1f1;
+	width: 95%;
 }
 
 .tableOfContent {
+	position: relative;
+	left: 5%;
+	width: 50%;
+	background-color: #d3d7cf;
 	align-content: center;
 	background-color: #d3d7cf;
+}
+
+h3 {
+	position: relative;
+	left: 5%;
 }
 
 .toTop {

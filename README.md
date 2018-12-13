@@ -163,13 +163,7 @@
 			<b>Example:</b>
 		</p>
 		<code>
-			<textarea readonly="readonly" rows="7" cols="80">@Test
-void testRandomize() throws InterruptedException {
-	BaseHand hand = new BaseHand(53, BaseHand.Duplicates.No); 
-	assertTimeout(TIME_OUT, ()
-		-> { hand.randomize(); 
-	}); 
-}</textarea>
+			<textarea readonly="readonly" rows="7" cols="80"></textarea>
 		</code>
 	</div>
 	<hr>

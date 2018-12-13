@@ -13,9 +13,11 @@ import java.util.Random;
  * @version 0.6.0
  * @since Dec 10 2018
  * @author Andy
- *
+ * @see Comparable
  */
-public class Card {
+
+
+public class Card implements Comparable<Card>{
 
 	/**
 	 * A public <b>enum</b> to address the <b>Suite</b> of the cards. The value of
@@ -118,5 +120,11 @@ public class Card {
 	@Override
 	public String toString() {
 		return this.rank + " of " + this.suite;
+	}
+
+	@Override
+	public int compareTo(Card o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

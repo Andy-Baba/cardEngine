@@ -6,44 +6,45 @@ import java.util.Iterator;
 /**
  * <h1>Class Hand:</h1>
  * <p>
- * A basic class to represent a <b>hand of {@link Card}s</b>. Its essentially is
- * a wrapper for {@link ArrayList} Class.
+ * A basic class to represent a <b>hand of {@link Card}s</b>. Its essentially a
+ * wrapper for {@link ArrayList} Class to represent a hand of card.
  * 
- * @version 0.5.0
+ * @version 0.8.0
  * @since Dec 11 2018
  * @author Andy
  * @see java.util.ArrayList
  * @see Card
+ * @see Hand
  */
-public class Hand implements Iterable<Card> {
+
+public class BaseHand implements Hand {
 
 	/**
-	 * <h3>Enum Duplicates:</h3>A <i>public</i> enum to show if a hand can accept
-	 * duplicate {@link Card}s or not.
-	 * 
-	 * @author Andy
+	 * The container of the cards
 	 */
-	public enum Duplicates {
-		Yes(true), No(false);
-		public final boolean value;
-
-		private Duplicates(boolean value) {
-			this.value = value;
-		}
-	}
-
 	private final ArrayList<Card> hand;
 
 	/**
-	 * A delimiter character used to separate the card strings
+	 * A delimiter string used to separate the card strings
+	 * <p>
+	 * <b>Default:</b> system.lineSperator()
 	 */
-	public static char DELIMITER;
+	public static String DELIMITER;
 	public final int MAX_CARDS;
-	private final Duplicates acceptDuplicate;
+	private final Hand.Duplicates acceptDuplicate;
 	private int hasDuplicate;
 
-	public Hand(int maxCards, Duplicates acceptDuplicate) throws IllegalArgumentException {
-		DELIMITER = '\n';
+	/**
+	 * Constructs a hand with a given <i>maximum number of cards</i> and if it can
+	 * accept duplicated <b>{@code Card}s or not</b>
+	 * 
+	 * @param maxCards        Maximum cards a hand can keep
+	 * @param acceptDuplicate If the hand accepts duplicated <b>Cards</b> or not
+	 * @throws IllegalArgumentException If the <b>maxCards</b> is none positive
+	 *                                  value.
+	 */
+	public BaseHand(int maxCards, Duplicates acceptDuplicate) throws IllegalArgumentException {
+		DELIMITER = System.lineSeparator();
 		hasDuplicate = 0;
 		if (maxCards <= 0) {
 			throw new IllegalArgumentException("A hand cannot have " + maxCards + " cards!");
@@ -53,7 +54,16 @@ public class Hand implements Iterable<Card> {
 		hand = new ArrayList<>(maxCards);
 	}
 
-	public Hand(int maxCards) throws IllegalArgumentException {
+	/**
+	 * Constructs a hand with a give <i>maximum number of cards</i>
+	 * <p>
+	 * A hand by default does not accept duplicated <b>{@link Card}s</b>.
+	 * 
+	 * @param maxCards Maximum cards a hand can keep
+	 * @throws IllegalArgumentException If the <b>maxCards</b> is none positive
+	 *                                  value.
+	 */
+	public BaseHand(int maxCards) throws IllegalArgumentException {
 		this(maxCards, Duplicates.No);
 	}
 
@@ -66,7 +76,8 @@ public class Hand implements Iterable<Card> {
 	 * @throws ArrayStoreException            If the <b>hand</b> does not accept
 	 *                                        duplicate <b>cards</b>
 	 */
-	public void addCard(Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
+	@Override
+	public void add(Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
 
 		if (this.contains(card)) {
 			if (this.acceptDuplicate.value)
@@ -80,6 +91,39 @@ public class Hand implements Iterable<Card> {
 			throw new ArrayIndexOutOfBoundsException("The hand can accpet only " + this.hand.size() + " cards.");
 	}
 
+	@Override
+	public void randomize(int count) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+		if (count <= 1)
+			throw new IllegalArgumentException("The hand cannot generate " + count + " number of cards");
+		int remainingCount = this.MAX_CARDS - this.hand.size();
+		if (count > remainingCount)
+			throw new ArrayIndexOutOfBoundsException(
+					"This hand does not have enough space to genreate " + count + " Cards.");
+		for (int i = 0; i < count;) {
+			try {
+				hand.add(new Card());
+				i++;
+			} catch (ArrayStoreException exception) {
+				continue;
+			}
+		}
+	}
+
+	/**
+	 * Fills the <b>hand</b> with random <b>{@link Card}s</b>. If the hand is not
+	 * empty already, it just does it for the remaining places in the hand with
+	 * respect to the maximum size of the hand set when constructing the hand.
+	 * <p>
+	 * If <b>accept duplicates flag</b> of the <b>hand</b> is set to <i>yes</i>it
+	 * will randomize with unique cards
+	 * 
+	 * @see BaseHand
+	 */
+	public void randomize() {
+		this.randomize(this.MAX_CARDS - this.hand.size());
+	}
+
+	@Override
 	public boolean contains(Card card) {
 		return this.hand.contains(card);
 	}
@@ -92,7 +136,7 @@ public class Hand implements Iterable<Card> {
 	public String toString() {
 		String out = "";
 		for (Card card : hand) {
-			out += card.toString() + Hand.DELIMITER;
+			out += card.toString() + BaseHand.DELIMITER;
 		}
 		return out;
 	}
@@ -114,29 +158,6 @@ public class Hand implements Iterable<Card> {
 	 */
 	public int cardsCount() {
 		return this.hand.size();
-	}
-
-	/**
-	 * Fills the <b>hand</b> with random <b>{@link Card}s</b>. If the hand is not
-	 * empty already, it just does it for the remaining places in the hand with
-	 * respect to the maximum size of the hand set when constructing the hand.
-	 * <p>
-	 * If <b>accept duplicates flag</b> of the <b>hand</b> is set to <i>yes</i>it
-	 * will randomize with unique cards
-	 * 
-	 * @see Hand
-	 */
-	public void randomize() {
-		int remainingCunt = this.MAX_CARDS - this.hand.size();
-
-		for (int i = 0; i < remainingCunt;) {
-			Card newCard = new Card();
-			if (this.acceptDuplicate == Hand.Duplicates.No)
-				if (hand.contains(newCard))
-					continue;
-			hand.add(newCard);
-			i++;
-		}
 	}
 
 	/**
@@ -163,12 +184,36 @@ public class Hand implements Iterable<Card> {
 			}
 
 			@Override
-			public Card next() {				
+			public Card next() {
 				return hand.get(currentIndex++);
 			}
 
 		};
 		return card;
+	}
+
+	@Override
+	public Card show(int index) throws ArrayIndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Card remove(int index) throws ArrayIndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int count() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int maxSize() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

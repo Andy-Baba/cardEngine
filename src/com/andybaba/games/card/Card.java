@@ -31,7 +31,7 @@ public class Card implements Comparable<Card> {
 
 		public final int value;
 
-		private Suite(int value) {
+		private Suite(final int value) {
 			this.value = value;
 		}
 
@@ -61,7 +61,7 @@ public class Card implements Comparable<Card> {
 
 		public final int value;
 
-		private Rank(int value) {
+		private Rank(final int value) {
 			this.value = value;
 		}
 
@@ -90,7 +90,7 @@ public class Card implements Comparable<Card> {
 	 * @see Card.Suite
 	 * @see Card.Rank
 	 */
-	public Card(Rank rank, Suite suite) {
+	public Card(final Rank rank, final Suite suite) {
 		this.rank = rank;
 		this.suite = suite;
 		this.value = (suite.value - 1) * 13 + rank.value;
@@ -122,7 +122,7 @@ public class Card implements Comparable<Card> {
 	}
 
 	@Override
-	public int compareTo(Card o) {
+	public int compareTo(final Card o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

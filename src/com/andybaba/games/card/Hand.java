@@ -21,7 +21,7 @@ public interface Hand extends Iterable<Card> {
 		Yes(true), No(false);
 		public final boolean value;
 
-		private Duplicates(boolean value) {
+		private Duplicates(final boolean value) {
 			this.value = value;
 		}
 	}
@@ -53,26 +53,28 @@ public interface Hand extends Iterable<Card> {
 	 * @throws ArrayIndexOutOfBoundsException If the hand does not have any empty
 	 *                                        slots for the given card
 	 */
-	public void add(Card card) throws ArrayIndexOutOfBoundsException;
+	public void add(final Card card) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	 * Shows the <b>{@link Card}</b> at the given position (<i>index</i>).
+	 * Shows the <b>{@link Card}</b> at the given <i>position</i>.
 	 * 
-	 * @param index the position of the card to be shown
+	 * @param position The position of the card to be shown, <b>the first card is at
+	 *                 position 1</b>
 	 * @return The Card at the given <i>index</i>
 	 * @throws ArrayIndexOutOfBoundsException If the <b>index</b> is pointing to and
 	 *                                        empty slot or out of size
 	 */
-	public Card show(int index) throws ArrayIndexOutOfBoundsException;
+	public Card show(final int postition) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	 * It removes a <b>{@link Card}</b>at a given position
+	 * Removes the <b>{@link Card}</b> at the given <i>position</i>.
 	 * 
-	 * @param index
-	 * @return
+	 * @param position The position of the card to be removed, <b>the first card is
+	 *                 at position 1</b>
+	 * @return If its successful it returns the <b>{@link Card}</b> which is removed
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public Card remove(int index) throws ArrayIndexOutOfBoundsException;
+	public Card remove(final int position) throws ArrayIndexOutOfBoundsException;
 
 	/**
 	 * Checks if the hand contains a given <b>{@link Card}</b>. It returns
@@ -82,7 +84,7 @@ public interface Hand extends Iterable<Card> {
 	 * 
 	 * @return <b>true</b> if it finds the card in the hand
 	 */
-	public boolean contains(Card card);
+	public boolean contains(final Card card);
 
 	/**
 	 * The current count of <b>{@link Card}s</b> in the hand.
@@ -106,4 +108,28 @@ public interface Hand extends Iterable<Card> {
 	 */
 	public int hasDuplicates();
 
+	/**
+	 * Checks if the hand is empty or not. For a hand to be empty it should contain
+	 * zero cards. This can only happen if the hand is just generated or all of its
+	 * cards are removed.
+	 * 
+	 * @return <i>True</i> if the hand is empty and <i>False</i> if its not
+	 */
+	public boolean isEmpty();
+
+	/**
+	 * Checks if the hand is full or not. For a hand to be full it should contain
+	 * the maximum <b>{@linke Card}s</b> it can take.
+	 * 
+	 * @return <i>True</i> if the hand is full and <i>False</i> if its not
+	 */
+	public boolean isFull();
+
+	/**
+	 * The count of remaining empty slots in the hand. Basically the hand can accept
+	 * this many <b>{@link Card}s</b> to be added to it.
+	 * 
+	 * @return Count of empty slots in the hand
+	 */
+	public int remainingSlots();
 }

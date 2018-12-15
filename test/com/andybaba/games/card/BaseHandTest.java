@@ -8,9 +8,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class BaseHandTest {
 
@@ -20,9 +25,13 @@ class BaseHandTest {
 	public final boolean SHOW_HANDS = true;
 	private static final Logger logger = Logger.getLogger("HandTest.logger");;
 	private static int testCounter = 0;
-	public final Duration TIME_OUT = Duration.ofMillis(200L);
+	public final Duration TIME_OUT = Duration.ofMillis(150L);
 
 	private Random random = new Random();
+	private String afterTestString;
+	private BaseHand hand = new BaseHand(1);
+	private final String SEPARATOR = "\n\t\t";
+	private boolean showHands = SHOW_HANDS;
 
 	@BeforeAll
 	public static void beforeAllTests() {
@@ -40,40 +49,53 @@ class BaseHandTest {
 		logger.info("End of test, total of " + testCounter + " were done for class: " + BaseHand.class.getName());
 	}
 
+	@BeforeEach
+	void beforeEachTest(final TestInfo testInfo) {
+		logger.info("++++++++++Test " + ++testCounter + ": " + testInfo.getDisplayName());
+		this.afterTestString = "Done";
+		this.showHands = this.SHOW_HANDS;
+	}
+
+	@AfterEach
+	void afterEachTest(final TestInfo testInfo) {
+		logger.info(this.afterTestString);
+		BaseHand.SEPARATOR = this.SEPARATOR;
+		String tempString = "----------Test " + testInfo.getTestMethod() + "\n\tThe hand has ";
+		if (this.showHands) {
+			if (this.hand.isEmpty())
+				tempString += "EMPTY";
+			else
+				tempString += hand.count() + " cards out of " + hand.maxSize() + this.SEPARATOR + hand;
+		}
+		logger.info(tempString);
+	}
+
 	@Test
 	@DisplayName("1.0 Adding Card to a hand that accepts dublicate cards")
 	public void testAddCardtoAccpetingduplicates() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
 		Card card = new Card();
-		for (int i = 0; i < this.DEFAULT_HAND_SIZE; i++)
+		for (int i = 0; i < this.DEFAULT_HAND_SIZE * 2 / 3; i++)
 			hand.add(card);
-		logger.info(this.DEFAULT_HAND_SIZE + ", " + card + " is added to the hand");
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
 	}
 
 	@Test
 	@DisplayName("1.1 Adding a duplicated card to a hand when its not allowed")
 	public void testAddCardDuplicated() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.No);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.No);
 		hand.randomize(this.DEFAULT_HAND_SIZE / 2 - 1);
 		hand.add(MY_CARD);
 		hand.randomize(this.DEFAULT_HAND_SIZE / 2 - 1);
 		assertThrows(ArrayStoreException.class, () -> {
 			hand.add(MY_CARD);
 		});
-		logger.info("Expected to throw: " + ArrayStoreException.class.getName());
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		this.afterTestString = "Expected to throw: " + ArrayStoreException.class.getName();
 	}
 
 	@Test
 	@DisplayName("1.2 Adding a duplicated card to a hand when its not allowed Manualy!")
 	public void testAddCardDuplicatedManually() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE); // It should by default not allow duplicated cards
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE); // It should by default not allow duplicated cards
 
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club));
@@ -84,28 +106,24 @@ class BaseHandTest {
 		assertThrows(ArrayStoreException.class, () -> {
 			hand.add(this.MY_CARD);
 		});
-		logger.info("Expected to throw: " + ArrayStoreException.class.getName());
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		this.afterTestString = "Expected to throw: " + ArrayStoreException.class.getName();
 	}
 
 	@Test
 	@DisplayName("1.3 Adding Card to a hand passing the max card value")
 	void testAddCardPassingTheMaxCardValue() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
 		hand.randomize();
 		assertThrows(IndexOutOfBoundsException.class, () -> {
 			hand.add(new Card());
 		});
-		logger.info("Expected to throw: " + IndexOutOfBoundsException.class.getName());
+		this.afterTestString = "Expected to throw: " + IndexOutOfBoundsException.class.getName();
 	}
 
 	@Test
 	@DisplayName("2.0 Roandomize with a number 0 or negative")
 	public void testRandomizeIntNonePositive() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(DEFAULT_HAND_SIZE);
+		hand = new BaseHand(DEFAULT_HAND_SIZE);
 		int testValue = -1 * this.random.nextInt(10000);
 		assertThrows(IllegalArgumentException.class, () -> {
 			hand.randomize(testValue);
@@ -116,33 +134,28 @@ class BaseHandTest {
 	@Test
 	@DisplayName("2.1 Roandomize with a number bigger than remaining number of slots in the hand")
 	void testRandomizeIntOutOfCapacity() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
 		hand.randomize(this.DEFAULT_HAND_SIZE / 2);
 		assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
 			hand.randomize(this.DEFAULT_HAND_SIZE / 2 + 1);
 		});
-		logger.info(hand.hasDuplicates() + ";" + hand.cardsCount());
+		this.afterTestString = hand.hasDuplicates() + ";" + hand.count();
 	}
 
 	@Test
 	@DisplayName("2.2 Can it randomize the hand in a given time")
 	void testRandomizeOnTime() throws InterruptedException {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(100, BaseHand.Duplicates.Yes);
+		hand = new BaseHand(100000, BaseHand.Duplicates.Yes);
 		assertTimeout(TIME_OUT, () -> {
 			hand.randomize();
 		});
-		logger.info(hand.hasDuplicates() + ";" + hand.cardsCount());
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		this.showHands = false;
 	}
 
 	@Test
 	@DisplayName("2.3 Randomizing an already full hand")
 	void testRandomizeFullHand() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
 		hand.randomize();
 		assertThrows(UnsupportedOperationException.class, () -> {
 			hand.randomize();
@@ -151,15 +164,12 @@ class BaseHandTest {
 
 	@Test
 	@DisplayName("2.4 Randomize without duplication")
-	void testRandomizeNoDuplication() throws InterruptedException {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(100, BaseHand.Duplicates.No);
+	void testRandomizeNoDuplication(TestInfo testInfo) throws InterruptedException {
+		hand = new BaseHand(53, BaseHand.Duplicates.No);
 		assertThrows(ArrayStoreException.class, () -> {
 			hand.randomize();
 		});
-		logger.info(hand.hasDuplicates() + ";" + hand.cardsCount());
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		this.afterTestString = hand.hasDuplicates() + ";" + hand.count();
 	}
 
 	@Test
@@ -171,97 +181,130 @@ class BaseHandTest {
 		logger.info("Done with value of: " + testValue);
 	}
 
-	@Test
-	@DisplayName(value = "3.1 Constructor with negative value")
-	void testHandNegativeOrZero() {
-		logger.info("Starting test number " + ++testCounter);
-		int testValue = -1 * random.nextInt(10000); // can be zero or a negative value
+	@ParameterizedTest
+	@DisplayName("3.1 Constructor with negative value or zero")
+	@ValueSource(ints = { -10, -23, 0, -14213 })
+	void testHandNegativeOrZero(final int testValue) {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new BaseHand(testValue);
+			hand = new BaseHand(testValue);
 		});
-		logger.info("Done with value: " + testValue);
+		this.afterTestString = "Done with value: " + testValue;
 	}
 
 	@Test
 	@DisplayName("4.0 Show the card at a given index")
 	void testShow() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
 		int testValue = random.nextInt(this.DEFAULT_HAND_SIZE / 2) + 2;
 		hand.randomize(testValue);
 		Card actual = new Card();
 		hand.add(actual);
-		assertEquals(hand.show(testValue), actual);
-		logger.info("The card at postion " + testValue + " is: " + actual);
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		assertEquals(hand.show(testValue + 1), actual);
+		this.afterTestString = "The card at postion " + testValue + " is: " + actual;
 	}
 
 	@Test
 	@DisplayName("5.0 Showing the current count of cards")
 	void testCount() {
-		logger.info("Starting test number " + ++testCounter);
 		int handSize = this.random.nextInt(this.DEFAULT_HAND_SIZE) + this.DEFAULT_HAND_SIZE;
-		BaseHand hand = new BaseHand(handSize);
+		hand = new BaseHand(handSize);
 		int expected = this.random.nextInt(this.DEFAULT_HAND_SIZE) + 2;
 		hand.randomize(expected);
 		logger.info("Hand size is " + handSize + ", fill it with " + expected + " random cards");
-		assertEquals(expected, hand.cardsCount());
-		logger.info("Asserting, expected: " + expected + " actual:" + hand.cardsCount());
+		assertEquals(expected, hand.count());
+		this.afterTestString = "Asserting, expected: " + expected + " actual:" + hand.count();
 	}
 
 	@Test
 	@DisplayName("6.0 Getting maximum number of cards the hand can hold")
 	void testMaxSize() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
 		assertEquals(this.DEFAULT_HAND_SIZE, hand.maxSize());
 	}
 
 	@Test
 	@DisplayName("7.0 Finding a given Card in the Hand")
 	void testContains() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
 		int testValue = random.nextInt(this.DEFAULT_HAND_SIZE / 2) + 2;
 		hand.randomize(testValue);
 		hand.add(this.MY_CARD);
 		hand.randomize();
 		assertTrue(hand.contains(this.MY_CARD));
-		logger.info("Found the card: " + this.MY_CARD);
-		if (this.SHOW_HANDS)
-			logger.info("Generated hand in this test:\n" + hand);
+		afterTestString = "Found the card: " + this.MY_CARD;
 	}
 
 	@Test
 	@DisplayName("8.0 Making sure if its returning string as expected")
 	void testToString() {
-		logger.info("Starting test number " + ++testCounter);
-		BaseHand hand = new BaseHand(2, Hand.Duplicates.Yes);
+		hand = new BaseHand(2, Hand.Duplicates.Yes);
 		Card card1 = new Card();
 		Card card2 = new Card();
-		BaseHand.DELIMIER = ";"; // Change the default delimiter to ;
+		BaseHand.SEPARATOR = ";"; // Change the default delimiter to ;
 		hand.add(card1);
 		hand.add(card2);
 
-		String expected = card1 + BaseHand.DELIMIER + card2 + BaseHand.DELIMIER;
+		String expected = card1 + BaseHand.SEPARATOR + card2 + BaseHand.SEPARATOR;
 		assertEquals(expected, hand.toString());
-		BaseHand.DELIMIER = System.lineSeparator(); // Change the default delimiter back to new line
+		BaseHand.SEPARATOR = System.lineSeparator(); // Change the default delimiter back to new line
 	}
 
 	@Test
+	@DisplayName("9.0 Removing a given card from the hand.")
+	void testRemove() {
+
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE); // It should by default not allow duplicated cards
+
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		hand.add(this.MY_CARD);
+		hand.add(new Card(Card.Rank.Trey, Card.Suite.Diamond));
+
+		assertEquals(this.MY_CARD, hand.remove(4));
+		this.afterTestString = "Expected to throw: " + ArrayStoreException.class.getName();
+	}
+
+	@Test
+	@DisplayName("10.0 Checks hand is empty")
+	void testIsEmpty() {
+		this.hand = new BaseHand(1);
+		assertEquals(true, hand.isEmpty());
+	}
+
+	@Test
+	@DisplayName("10.1 Checks hand is full")
+	void testIsFull() {
+		this.hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand.randomize();
+		assertEquals(true, hand.isFull());
+	}
+
+	@ParameterizedTest
+	@DisplayName("11.0 Check the empty slots")
+	@ValueSource(ints = { 0, 3, 10 })
+	void testEmptySlots(final int testValue) {
+		this.hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		if (testValue > 0)
+			hand.randomize(testValue);
+		assertEquals(hand.remainingSlots(), this.DEFAULT_HAND_SIZE - testValue);
+	}
+
+	@Test
+	@DisplayName("12.0 Counting the number of duplicates in the hand")
 	void testHasDuplicates() {
 		fail("Not yet implemented");
 	}
 
 	@Test
+	@DisplayName("13.0 Iterate through the hand")
 	void testIterator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemove() {
-		fail("Not yet implemented");
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand.randomize(this.DEFAULT_HAND_SIZE / 2);
+		String expected = "";
+		for (Card card : hand)
+			expected += card + BaseHand.SEPARATOR;
+		assertEquals(expected, hand.toString());
 	}
 
 }

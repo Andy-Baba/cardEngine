@@ -27,24 +27,35 @@ public class BaseHand implements Hand {
 	/**
 	 * A delimiter string used to separate the card strings
 	 * <p>
-	 * <b>Default:</b> system.lineSperator()
+	 * <b>Default:</b> {@link System#lineSeparator() }
 	 */
-	public static String DELIMIER;
+	public static String SEPARATOR = System.lineSeparator();
+
+	/**
+	 * The maximum number of {@link Card}s a hand can keep. It is a final value and
+	 * initialize at the construction of the hand
+	 * 
+	 * @see BaseHand#BaseHand(int)
+	 */
 	private final int MAX_CARDS;
 	private final Hand.Duplicates acceptDuplicate;
+
+	/**
+	 * The count of duplicated occurrences in a hand
+	 */
 	private int hasDuplicate;
 
 	/**
-	 * Constructs a hand with a given <i>maximum number of cards</i> and if it can
-	 * accept duplicated <b>{@code Card}s or not</b>
+	 * Constructs a hand with a given {@link } and if it can accept duplicated
+	 * <b>{@code Card}s</b>
 	 * 
 	 * @param maxCards        Maximum cards a hand can keep
 	 * @param acceptDuplicate If the hand accepts duplicated <b>Cards</b> or not
 	 * @throws IllegalArgumentException If the <b>maxCards</b> is none positive
 	 *                                  value.
+	 * @See {@link Hand.Duplicates}
 	 */
 	public BaseHand(int maxCards, Duplicates acceptDuplicate) throws IllegalArgumentException {
-		DELIMIER = System.lineSeparator();
 		hasDuplicate = 0;
 		if (maxCards <= 0) {
 			throw new IllegalArgumentException("A hand cannot have " + maxCards + " cards!");
@@ -63,7 +74,7 @@ public class BaseHand implements Hand {
 	 * @throws IllegalArgumentException If the <b>maxCards</b> is none positive
 	 *                                  value.
 	 */
-	public BaseHand(int maxCards) throws IllegalArgumentException {
+	public BaseHand(final int maxCards) throws IllegalArgumentException {
 		this(maxCards, Duplicates.No);
 	}
 
@@ -77,7 +88,7 @@ public class BaseHand implements Hand {
 	 *                                        duplicate <b>cards</b>
 	 */
 	@Override
-	public void add(Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
+	public void add(final Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
 
 		if (this.contains(card)) {
 			if (this.acceptDuplicate.value)
@@ -92,14 +103,13 @@ public class BaseHand implements Hand {
 	}
 
 	@Override
-	public void randomize(int count)
+	public void randomize(final int count)
 			throws ArrayIndexOutOfBoundsException, IllegalArgumentException, UnsupportedOperationException {
 		if (count < 0)
 			throw new IllegalArgumentException("The hand cannot generate " + count + " number of cards");
-		int remainingCount = this.MAX_CARDS - this.hand.size();
-		if (remainingCount == 0)
+		if (this.isFull())
 			throw new UnsupportedOperationException("The hand is already full");
-		if (count > remainingCount)
+		if (count > this.remainingSlots())
 			throw new ArrayIndexOutOfBoundsException(
 					"This hand does not have enough space to genreate " + count + " Cards.");
 		for (int i = 0; i < count;) {
@@ -127,19 +137,19 @@ public class BaseHand implements Hand {
 	}
 
 	@Override
-	public boolean contains(Card card) {
+	public boolean contains(final Card card) {
 		return this.hand.contains(card);
 	}
 
 	/**
 	 * @return The String containing all the cards in the hand separated by
-	 *         {@link DELIMITER}
+	 *         {@link BaseHand#DELIMIER}
 	 */
 	@Override
 	public String toString() {
 		String out = "";
 		for (Card card : hand) {
-			out += card.toString() + BaseHand.DELIMIER;
+			out += card.toString() + BaseHand.SEPARATOR;
 		}
 		return out;
 	}
@@ -154,26 +164,14 @@ public class BaseHand implements Hand {
 		return hasDuplicate;
 	}
 
-	/**
-	 * Gets the current number of cards in the hand
-	 * 
-	 * @return Current number of cards in the hand
-	 */
-	public int cardsCount() {
+	@Override
+	public int count() {
 		return this.hand.size();
 	}
 
-	/**
-	 * Returns the card at given <b>index</b>.
-	 * 
-	 * @param index
-	 * @throws {@link IndexOutOfBoundsException} if the <b>index</b> is bigger than
-	 *         current size of the hand
-	 * @return
-	 */
 	@Override
-	public Card show(int index) throws IndexOutOfBoundsException {
-		return hand.get(index);
+	public Card show(final int position) throws IndexOutOfBoundsException {
+		return hand.get(position - 1);
 	}
 
 	@Override
@@ -197,20 +195,28 @@ public class BaseHand implements Hand {
 	}
 
 	@Override
-	public Card remove(int index) throws ArrayIndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
+	public Card remove(final int position) throws ArrayIndexOutOfBoundsException {
+		return this.hand.remove(position - 1);
 	}
 
 	@Override
 	public int maxSize() {
 		return this.MAX_CARDS;
+	}
+
+	@Override
+	public boolean isFull() {
+		return this.hand.size() == this.MAX_CARDS;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return this.hand.isEmpty();
+	}
+
+	@Override
+	public int remainingSlots() {
+		return this.MAX_CARDS - this.hand.size();
 	}
 
 }

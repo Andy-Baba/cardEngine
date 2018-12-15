@@ -17,6 +17,10 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import com.andybaba.games.card.Card.Rank;
+import com.andybaba.games.card.Card.Suite;
+import com.andybaba.games.card.Hand.Duplicates;
+
 class BaseHandTest {
 
 	public final int DEFAULT_HAND_SIZE = 10;
@@ -41,7 +45,7 @@ class BaseHandTest {
 		logger.setLevel(test.HAND_TEST_LOG_LEVEL);
 		logger.info("Setting up the test with following configuration:" + "\n\tDEFAULT_HAND_SIZE: "
 				+ test.DEFAULT_HAND_SIZE + "\n\tMY_CARD: " + test.MY_CARD + "\n\tLOG.LEVEL: " + test.HAND_TEST_LOG_LEVEL
-				+ "\n\tGLOBAL_TIME_OUT: " + test.TIME_OUT.toMillis() + "\n\tSHOW_HANDS: " + test.SHOW_HANDS);
+				+ "\n\tGLOBAL_TIME_OUT: " + test.TIME_OUT + "\n\tSHOW_HANDS: " + test.SHOW_HANDS);
 	}
 
 	@AfterAll
@@ -72,7 +76,7 @@ class BaseHandTest {
 
 	@Test
 	@DisplayName("1.0 Adding Card to a hand that accepts dublicate cards")
-	public void testAddCardtoAccpetingduplicates() {
+	void testAddtoAccpetingduplicates() {
 		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
 		Card card = new Card();
 		for (int i = 0; i < this.DEFAULT_HAND_SIZE * 2 / 3; i++)
@@ -81,25 +85,24 @@ class BaseHandTest {
 
 	@Test
 	@DisplayName("1.1 Adding a duplicated card to a hand when its not allowed")
-	public void testAddCardDuplicated() {
+	void testAddDuplicated() {
 		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.No);
-		hand.randomize(this.DEFAULT_HAND_SIZE / 2 - 1);
-		hand.add(MY_CARD);
-		hand.randomize(this.DEFAULT_HAND_SIZE / 2 - 1);
+		hand.randomize(this.DEFAULT_HAND_SIZE * 2 / 3);
+		Card card = hand.show(hand.count() / 2);
 		assertThrows(ArrayStoreException.class, () -> {
-			hand.add(MY_CARD);
+			hand.add(card);
 		});
 		this.afterTestString = "Expected to throw: " + ArrayStoreException.class.getName();
 	}
 
 	@Test
 	@DisplayName("1.2 Adding a duplicated card to a hand when its not allowed Manualy!")
-	public void testAddCardDuplicatedManually() {
+	void testAddDuplicatedManually() {
 		hand = new BaseHand(this.DEFAULT_HAND_SIZE); // It should by default not allow duplicated cards
 
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club));
-		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Heart));
 		hand.add(this.MY_CARD);
 		hand.add(new Card(Card.Rank.Trey, Card.Suite.Diamond));
 
@@ -111,7 +114,7 @@ class BaseHandTest {
 
 	@Test
 	@DisplayName("1.3 Adding Card to a hand passing the max card value")
-	void testAddCardPassingTheMaxCardValue() {
+	void testAddPassingTheMaxCardValue() {
 		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
 		hand.randomize();
 		assertThrows(IndexOutOfBoundsException.class, () -> {
@@ -122,7 +125,7 @@ class BaseHandTest {
 
 	@Test
 	@DisplayName("2.0 Roandomize with a number 0 or negative")
-	public void testRandomizeIntNonePositive() {
+	void testRandomizeIntNonePositive() {
 		hand = new BaseHand(DEFAULT_HAND_SIZE);
 		int testValue = -1 * this.random.nextInt(10000);
 		assertThrows(IllegalArgumentException.class, () -> {
@@ -165,7 +168,8 @@ class BaseHandTest {
 	@Test
 	@DisplayName("2.4 Randomize without duplication")
 	void testRandomizeNoDuplication(TestInfo testInfo) throws InterruptedException {
-		hand = new BaseHand(53, BaseHand.Duplicates.No);
+		fail("When 53 cards, duplicated not allowd, goes infinite loop");
+		hand = new BaseHand(53);
 		assertThrows(ArrayStoreException.class, () -> {
 			hand.randomize();
 		});
@@ -194,7 +198,7 @@ class BaseHandTest {
 	@Test
 	@DisplayName("4.0 Show the card at a given index")
 	void testShow() {
-		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, Duplicates.Yes);
 		int testValue = random.nextInt(this.DEFAULT_HAND_SIZE / 2) + 2;
 		hand.randomize(testValue);
 		Card actual = new Card();
@@ -235,6 +239,17 @@ class BaseHandTest {
 	}
 
 	@Test
+	@DisplayName("7.1 Finding a given Card in the Hand where it deos not exist")
+	void testNotContains() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, BaseHand.Duplicates.Yes);
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		assertFalse(hand.contains(this.MY_CARD));
+		afterTestString = "Card was not found: " + this.MY_CARD;
+	}
+
+	@Test
 	@DisplayName("8.0 Making sure if its returning string as expected")
 	void testToString() {
 		hand = new BaseHand(2, Hand.Duplicates.Yes);
@@ -257,7 +272,7 @@ class BaseHandTest {
 
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
 		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club));
-		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade));
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Heart));
 		hand.add(this.MY_CARD);
 		hand.add(new Card(Card.Rank.Trey, Card.Suite.Diamond));
 
@@ -293,7 +308,17 @@ class BaseHandTest {
 	@Test
 	@DisplayName("12.0 Counting the number of duplicates in the hand")
 	void testHasDuplicates() {
-		fail("Not yet implemented");
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE, Duplicates.Yes); // It should by default not allow duplicated cards
+
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade)); // Duplicates are 0
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club)); // Duplicates are 0
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade)); // Duplicates are 1
+		hand.add(this.MY_CARD); // Duplicates are 1
+		hand.add(new Card(Card.Rank.Trey, Card.Suite.Diamond)); // Duplicates are 1
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Spade)); // Duplicates are 2
+		hand.add(this.MY_CARD); // Duplicates are 3
+		hand.add(new Card(Card.Rank.Ace, Card.Suite.Club)); // Duplicates are 4
+		assertEquals(4, hand.hasDuplicates());
 	}
 
 	@Test
@@ -305,6 +330,43 @@ class BaseHandTest {
 		for (Card card : hand)
 			expected += card + BaseHand.SEPARATOR;
 		assertEquals(expected, hand.toString());
+	}
+
+	@Test
+	@DisplayName("14.0 compare two different sized hands")
+	void testEquals() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand.add(new Card(Rank.Seven, Suite.Diamond));
+		hand.add(new Card(Rank.King, Suite.Heart));
+
+		BaseHand hand2 = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand2.add(new Card(Rank.Deuce, Suite.Club));
+		hand2.add(new Card(Rank.Seven, Suite.Club));
+		hand2.add(new Card(Rank.Seven, Suite.Diamond));
+
+		assertThrows(IndexOutOfBoundsException.class, () -> {
+			hand.equals(hand2);
+		});
+	}
+
+	@Test
+	@DisplayName("15.0 Sort the hand")
+	void testSort() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand.add(new Card(Rank.Seven, Suite.Diamond));
+		hand.add(new Card(Rank.King, Suite.Heart));
+		hand.add(new Card(Rank.Seven, Suite.Spade));
+		hand.add(new Card(Rank.Deuce, Suite.Club));
+		hand.add(new Card(Rank.Seven, Suite.Club));
+		hand.sort();
+
+		BaseHand expected = new BaseHand(this.DEFAULT_HAND_SIZE);
+		expected.add(new Card(Rank.Deuce, Suite.Club));
+		expected.add(new Card(Rank.Seven, Suite.Club));
+		expected.add(new Card(Rank.Seven, Suite.Diamond));
+		expected.add(new Card(Rank.King, Suite.Heart));
+		expected.add(new Card(Rank.Seven, Suite.Spade));
+		assertEquals(expected, hand);
 	}
 
 }

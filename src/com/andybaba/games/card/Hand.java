@@ -132,4 +132,9 @@ public interface Hand extends Iterable<Card> {
 	 * @return Count of empty slots in the hand
 	 */
 	public int remainingSlots();
+
+	/**
+	 * Sort the cards in the hand.
+	 */
+	public void sort();
 }

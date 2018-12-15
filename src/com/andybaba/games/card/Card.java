@@ -2,6 +2,7 @@ package com.andybaba.games.card;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -78,6 +79,29 @@ public class Card implements Comparable<Card> {
 		}
 	}
 
+	/**
+	 * If you want to sort the hand by the value of the cards you can use this
+	 * {@link Comparator}
+	 */
+	public final static Comparator<Card> BY_VALUE = new Comparator<Card>() {
+		@Override
+		public int compare(final Card card1, final Card card2) {
+			return card1.value - card2.value;
+		}
+	};
+
+	/**
+	 * If you want to sort the hand by the value of the cards you can use this
+	 * {@link Comparator}
+	 */
+	public final static Comparator<Card> BY_RANK = new Comparator<Card>() {
+		@Override
+		public int compare(final Card card1, final Card card2) {
+			// let your comparator look up your car's color in the custom order
+			return card1.rank.value - card2.rank.value;
+		}
+	};
+
 	private final int value;
 	public final Suite suite;
 	public final Rank rank;
@@ -122,8 +146,13 @@ public class Card implements Comparable<Card> {
 	}
 
 	@Override
-	public int compareTo(final Card o) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(final Card card) {
+		int tmp = this.rank.value - card.rank.value;
+		return tmp;
+	}
+
+	@Override
+	public boolean equals(final Object card) {
+		return this.value == ((Card) card).value;
 	}
 }

@@ -90,16 +90,16 @@ public class BaseHand implements Hand {
 	@Override
 	public void add(final Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
 
-		if (this.contains(card)) {
-			if (this.acceptDuplicate.value)
+		if (this.isFull())
+			throw new ArrayIndexOutOfBoundsException("The hand can accpet only " + this.maxSize() + " cards.");
+		if (this.acceptDuplicate.value) {
+			if (this.contains(card))
 				this.hasDuplicate++;
-			else
+		} else {
+			if (this.hand.contains(card))
 				throw new ArrayStoreException("The hand already contains " + card + "!");
 		}
-		if (this.hand.size() < this.MAX_CARDS)
-			this.hand.add(card);
-		else
-			throw new ArrayIndexOutOfBoundsException("The hand can accpet only " + this.hand.size() + " cards.");
+		this.hand.add(card);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class BaseHand implements Hand {
 					"This hand does not have enough space to genreate " + count + " Cards.");
 		for (int i = 0; i < count;) {
 			try {
-				hand.add(new Card());
+				this.add(new Card());
 				i++;
 			} catch (ArrayStoreException exception) {
 				continue;
@@ -219,4 +219,34 @@ public class BaseHand implements Hand {
 		return this.MAX_CARDS - this.hand.size();
 	}
 
+	/**
+	 * Compares hands together. The hands are being compared should have the same
+	 * amount of cards in them (The size can be different). It compares each card
+	 * with its corresponding card in the other hand therefore you should sort hands
+	 * before comparing them by this method.
+	 * 
+	 * @throws IndexOutOfBoundsException When the count of hands are being compared
+	 *                                   is not equal
+	 */
+	@Override
+	public boolean equals(Object obj) throws IndexOutOfBoundsException {
+		BaseHand hand = (BaseHand) obj;
+		final int thisCount = this.count();
+		if (thisCount != hand.count())
+			throw new IndexOutOfBoundsException(
+					"Size mismatch, This has " + thisCount + " cads, but obj has " + hand.count() + " cards.");
+		boolean result = true;
+		for (int i = 1; i < -thisCount && result; i++)
+			result = this.show(i) == hand.show(i);
+
+		return result;
+	}
+
+	/**
+	 * It sorts the hand based on the {@link Card#getValue()} of the cards.
+	 */
+	@Override
+	public void sort() {
+		this.hand.sort(Card.BY_VALUE);
+	}
 }

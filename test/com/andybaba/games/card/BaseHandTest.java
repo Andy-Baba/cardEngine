@@ -148,7 +148,7 @@ class BaseHandTest {
 	@Test
 	@DisplayName("2.2 Can it randomize the hand in a given time")
 	void testRandomizeOnTime() throws InterruptedException {
-		hand = new BaseHand(100000, BaseHand.Duplicates.Yes);
+		hand = new BaseHand(1000, BaseHand.Duplicates.Yes);
 		assertTimeout(TIME_OUT, () -> {
 			hand.randomize();
 		});
@@ -212,7 +212,7 @@ class BaseHandTest {
 	void testCount() {
 		int handSize = this.random.nextInt(this.DEFAULT_HAND_SIZE) + this.DEFAULT_HAND_SIZE;
 		hand = new BaseHand(handSize);
-		int expected = this.random.nextInt(this.DEFAULT_HAND_SIZE) + 2;
+		int expected = this.random.nextInt(this.DEFAULT_HAND_SIZE / 2) + 2;
 		hand.randomize(expected);
 		logger.info("Hand size is " + handSize + ", fill it with " + expected + " random cards");
 		assertEquals(expected, hand.count());

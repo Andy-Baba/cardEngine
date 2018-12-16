@@ -22,7 +22,7 @@ public class BaseHand implements Hand {
 	/**
 	 * The container of the cards
 	 */
-	private final ArrayList<Card> hand;
+	protected final ArrayList<Card> hand;
 
 	/**
 	 * A delimiter string used to separate the card strings

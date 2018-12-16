@@ -1,13 +1,14 @@
 package com.andybaba.games.card;
 
 /**
- * Interface for hand, it is expected that the class implementing this interface
- * should create a hand with a specific number of slots for <b>{@code Card}s</b>
- * to be added later
+ * <h2>Interface Hand</h2> Interface for hand, it is expected that the class
+ * implementing this interface should create a hand with a specific number of
+ * slots for <b>{@code Card}s</b> to be added later
  * 
  * @version 1.0.0
  * @since Dec 13 2018
  * @author Andy
+ * @see Iterable
  */
 public interface Hand extends Iterable<Card> {
 

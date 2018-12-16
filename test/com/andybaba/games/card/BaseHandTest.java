@@ -2,11 +2,6 @@ package com.andybaba.games.card;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Duration;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,31 +9,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 
 import com.andybaba.games.card.Card.Rank;
 import com.andybaba.games.card.Card.Suite;
 import com.andybaba.games.card.Hand.Duplicates;
+import com.andybaba.TestClass;
 
-class BaseHandTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BaseHandTest extends TestClass {
 
 	public final int DEFAULT_HAND_SIZE = 10;
 	public final Card MY_CARD = new Card(Card.Rank.Five, Card.Suite.Club); // set my card as 5 of Club
-	public final Level HAND_TEST_LOG_LEVEL = Level.ALL;
+	
 	public final boolean SHOW_HANDS = true;
-	private static final Logger logger = Logger.getLogger("HandTest.logger");;
-	private static int testCounter = 0;
-	public final Duration TIME_OUT = Duration.ofMillis(150L);
-
-	private Random random = new Random();
-	private String afterTestString;
 	private BaseHand hand = new BaseHand(1);
-	private final String SEPARATOR = "\n\t\t";
 	private boolean showHands = SHOW_HANDS;
 
 	@BeforeAll
-	public static void beforeAllTests() {
+	@Override
+	public void beforeAllTests() {
 		BaseHandTest test = new BaseHandTest();
 
 		logger.info("Starting the Test of: " + BaseHand.class.getName());
@@ -49,7 +42,7 @@ class BaseHandTest {
 	}
 
 	@AfterAll
-	public static void afterAllTests() {
+	public void afterAllTests() {
 		logger.info("End of test, total of " + testCounter + " were done for class: " + BaseHand.class.getName());
 	}
 

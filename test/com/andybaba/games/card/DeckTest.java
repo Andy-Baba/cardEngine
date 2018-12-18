@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.andybaba.TestClass;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DeckTest extends TestClass {
+public class DeckTest extends TestClass {
 //class DeckTest extends BaseHandTest {
 
 	public final boolean SHOW_HANDS = true;

@@ -9,13 +9,13 @@ package com.andybaba.games.card;
  * <a href="https://en.wikipedia.org/wiki/Rummy">Rummy</a> or
  * <a href="https://en.wikipedia.org/wiki/Blackjack">BlackJack</a>
  * 
- * @version 1.0.1
+ * @version 1.0.2
  * @since Dec 10 2018
  * @author Andy
  * @see BaseHand
  */
 
-public class Deck extends BaseHand {
+public final class Deck extends BaseHand {
 
 	/**
 	 * A limitation to the actual number of decks that a {@link Deck} can hold.
@@ -64,16 +64,18 @@ public class Deck extends BaseHand {
 		return this.deckNumber;
 	}
 
+	public void shuffle() {
+		// TODO Have to create shuffle methods
+	}
 	/**
 	 * Initialize a deck with cards in order
 	 */
 	private void intitialize() {
-		for (int i = 0; i < this.deckNumber; i++) {
-			for (Card.Suite suite : Card.Suite.values()) {
-				for (Card.Rank rank : Card.Rank.values()) {
+		for (int i = 0; i < this.deckNumber; i++)
+			for (Card.Suite suite : Card.Suite.values())
+				for (Card.Rank rank : Card.Rank.values())
 					super.add(new Card(rank, suite));
-				}
-			}
-		}
+
 	}
+
 }

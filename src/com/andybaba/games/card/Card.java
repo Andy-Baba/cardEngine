@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <h1>Class Card:</h1>
+ * <h2>Class Card</h2>
  * <p>
  * A base class for playing cards. It also contains two public <i>enums</i> for
  * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.

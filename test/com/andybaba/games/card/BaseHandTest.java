@@ -13,32 +13,30 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-
 import com.andybaba.games.card.Card.Rank;
 import com.andybaba.games.card.Card.Suite;
 import com.andybaba.games.card.Hand.Duplicates;
 import com.andybaba.TestClass;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BaseHandTest extends TestClass {
+public class BaseHandTest extends TestClass {
 
 	public final int DEFAULT_HAND_SIZE = 10;
 	public final Card MY_CARD = new Card(Card.Rank.Five, Card.Suite.Club); // set my card as 5 of Club
+
 	
-	public final boolean SHOW_HANDS = true;
+	public final boolean SHOW_HANDS = false;
 	private BaseHand hand = new BaseHand(1);
 	private boolean showHands = SHOW_HANDS;
 
 	@BeforeAll
 	@Override
 	public void beforeAllTests() {
+		logger.setLevel(TEST_LOG_LEVEL);
+		logger.info("Starting the Test of: " + Deck.class.getName());
 		BaseHandTest test = new BaseHandTest();
-
-		logger.info("Starting the Test of: " + BaseHand.class.getName());
-		logger.setLevel(test.HAND_TEST_LOG_LEVEL);
-		logger.info("Setting up the test with following configuration:" + "\n\tDEFAULT_HAND_SIZE: "
-				+ test.DEFAULT_HAND_SIZE + "\n\tMY_CARD: " + test.MY_CARD + "\n\tLOG.LEVEL: " + test.HAND_TEST_LOG_LEVEL
-				+ "\n\tGLOBAL_TIME_OUT: " + test.TIME_OUT + "\n\tSHOW_HANDS: " + test.SHOW_HANDS);
+		logger.info("Test Configuration:\n\t\tDEFAULT HAND SIZE=" + test.DEFAULT_HAND_SIZE + "\n\t\tMY_CARD="
+				+ test.MY_CARD + "\n\t\tSHOW HANDS=" + test.SHOW_HANDS);
 	}
 
 	@AfterAll
@@ -326,16 +324,16 @@ class BaseHandTest extends TestClass {
 	}
 
 	@Test
-	@DisplayName("14.0 compare two different sized hands")
+	@DisplayName("14.0 Comparing two different sized hands")
 	void testEquals() {
 		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
 		hand.add(new Card(Rank.Seven, Suite.Diamond));
 		hand.add(new Card(Rank.King, Suite.Heart));
 
 		BaseHand hand2 = new BaseHand(this.DEFAULT_HAND_SIZE);
-		hand2.add(new Card(Rank.Deuce, Suite.Club));
-		hand2.add(new Card(Rank.Seven, Suite.Club));
 		hand2.add(new Card(Rank.Seven, Suite.Diamond));
+		hand2.add(new Card(Rank.King, Suite.Heart));
+		hand2.add(new Card(Rank.Deuce, Suite.Club));
 
 		assertThrows(IndexOutOfBoundsException.class, () -> {
 			hand.equals(hand2);

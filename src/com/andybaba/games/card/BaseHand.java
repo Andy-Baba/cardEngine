@@ -230,14 +230,14 @@ public class BaseHand implements Hand {
 	 */
 	@Override
 	public boolean equals(Object obj) throws IndexOutOfBoundsException {
-		BaseHand hand = (BaseHand) obj;
+		BaseHand actual = (BaseHand) obj;
 		final int thisCount = this.count();
-		if (thisCount != hand.count())
+		if (thisCount != actual.count())
 			throw new IndexOutOfBoundsException(
-					"Size mismatch, This has " + thisCount + " cads, but obj has " + hand.count() + " cards.");
+					"Size mismatch, This has " + thisCount + " cads, but obj has " + actual.count() + " cards.");
 		boolean result = true;
-		for (int i = 1; i < -thisCount && result; i++)
-			result = this.show(i) == hand.show(i);
+		for (int i = 1; i <= thisCount && result; i++)
+			result = this.show(i).equals(actual.show(i));
 
 		return result;
 	}

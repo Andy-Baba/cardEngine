@@ -1,4 +1,4 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -79,17 +79,30 @@ public class BaseHand implements Hand {
 	}
 
 	/**
-	 * Adds a given card to the hand. It will check the <b>hasDuplicate</b> flag, if
-	 * the flag is false, it will not accept duplicated <b>cards</b>
+	 * Adds a given {@link Card} to the hand at a given <i>position</b>. It will
+	 * check the <b>hasDuplicate</b> flag, if the flag is false, it will not accept
+	 * duplicated <b>cards</b>. Since this method is using the
+	 * {@link ArrayList#add(int, Object)} internally, it should be noticed that the
+	 * cards will be moved a slot to the right, when a new card is added to the
+	 * hand.
 	 * 
-	 * @param card The card to be added to the hand
-	 * @throws ArrayIndexOutOfBoundsException If the hand is already full
+	 * @param position The position of which the <i>card</i> to be inserted. Like
+	 *                 the rest of the {@link Hand} class the position of a card in
+	 *                 the hand starts from 1 (not zero).
+	 * @param card     The card to be added to the hand
+	 * @throws ArrayIndexOutOfBoundsException If the hand is already full OR the
+	 *                                        given <i>position</i> is not valid
 	 * @throws ArrayStoreException            If the <b>hand</b> does not accept
 	 *                                        duplicate <b>cards</b>
 	 */
 	@Override
-	public void add(final Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
-
+	public void add(final int position, final Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
+		if (position < 1)
+			throw new ArrayIndexOutOfBoundsException(
+					"A hand starts from position 1, so " + position + " is not acceptable.");
+		if (position > this.hand.size() + 1)
+			throw new ArrayIndexOutOfBoundsException("Given position " + position
+					+ " should be smaller current number of cards in the hand:" + this.count());
 		if (this.isFull())
 			throw new ArrayIndexOutOfBoundsException("The hand can accpet only " + this.maxSize() + " cards.");
 		if (this.acceptDuplicate.value) {
@@ -99,7 +112,20 @@ public class BaseHand implements Hand {
 			if (this.hand.contains(card))
 				throw new ArrayStoreException("The hand already contains " + card + "!");
 		}
-		this.hand.add(card);
+		this.hand.add(position - 1, card);
+	}
+
+	/**
+	 * Adds a given {@link Card} to the end of the hand.
+	 * 
+	 * @param card The card to be added to the hand
+	 * @throws ArrayIndexOutOfBoundsException If the hand is already full
+	 * @throws ArrayStoreException            If the <b>hand</b> does not accept
+	 *                                        duplicate <b>cards</b>
+	 * @see {@link BaseHand#add(int, Card)}
+	 */
+	public void add(final Card card) throws ArrayIndexOutOfBoundsException, ArrayStoreException {
+		this.add(this.hand.size() + 1, card);
 	}
 
 	@Override
@@ -249,4 +275,5 @@ public class BaseHand implements Hand {
 	public void sort() {
 		this.hand.sort(Card.BY_VALUE);
 	}
+
 }

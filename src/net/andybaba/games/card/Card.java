@@ -1,4 +1,4 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 import java.util.Arrays;
 import java.util.Collections;

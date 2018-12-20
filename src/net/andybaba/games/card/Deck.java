@@ -1,4 +1,4 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 /**
  * <h2>Class Deck</h2>
@@ -24,6 +24,11 @@ public final class Deck extends BaseHand {
 	public final static int MAX_DECKS = 10;
 	private final static int MAX_CARD = 52;
 	private final int deckNumber;
+
+	public interface Shuffler {
+		// TODO Shuffler for lamda expression for the deck to be used by the dealer
+		public void shuffle();
+	}
 
 	/**
 	 * Constructs a none standard deck where duplicates are allowed and number of
@@ -64,9 +69,11 @@ public final class Deck extends BaseHand {
 		return this.deckNumber;
 	}
 
-	public void shuffle() {
+	public void shuffle(Shuffler shuffler) {
+		
 		// TODO Have to create shuffle methods
 	}
+
 	/**
 	 * Initialize a deck with cards in order
 	 */
@@ -77,5 +84,4 @@ public final class Deck extends BaseHand {
 					super.add(new Card(rank, suite));
 
 	}
-
 }

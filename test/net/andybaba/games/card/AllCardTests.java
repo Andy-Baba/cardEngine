@@ -1,4 +1,4 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;

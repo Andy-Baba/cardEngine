@@ -1,4 +1,4 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,10 +13,14 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.andybaba.games.card.Card.Rank;
-import com.andybaba.games.card.Card.Suite;
-import com.andybaba.games.card.Hand.Duplicates;
-import com.andybaba.TestClass;
+import net.andybaba.TestClass;
+import net.andybaba.games.card.BaseHand;
+import net.andybaba.games.card.Card;
+import net.andybaba.games.card.Deck;
+import net.andybaba.games.card.Hand;
+import net.andybaba.games.card.Card.Rank;
+import net.andybaba.games.card.Card.Suite;
+import net.andybaba.games.card.Hand.Duplicates;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseHandTest extends TestClass {
@@ -24,7 +28,6 @@ public class BaseHandTest extends TestClass {
 	public final int DEFAULT_HAND_SIZE = 10;
 	public final Card MY_CARD = new Card(Card.Rank.Five, Card.Suite.Club); // set my card as 5 of Club
 
-	
 	public final boolean SHOW_HANDS = false;
 	private BaseHand hand = new BaseHand(1);
 	private boolean showHands = SHOW_HANDS;
@@ -112,6 +115,34 @@ public class BaseHandTest extends TestClass {
 			hand.add(new Card());
 		});
 		this.afterTestString = "Expected to throw: " + IndexOutOfBoundsException.class.getName();
+	}
+
+	@Test
+	@DisplayName("1.4 Adding a card to the end of the hand")
+	void testAddToPosition() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		Card card1 = new Card(Card.Rank.Five, Card.Suite.Heart);
+		Card card2 = new Card(Card.Rank.Jack, Card.Suite.Diamond);
+		Card card3 = new Card(Card.Rank.Queen, Card.Suite.Heart);
+
+		hand.add(card1);
+		hand.add(card2);
+		hand.add(1, card3);
+
+		String expected = card3 + this.SEPARATOR + card1 + this.SEPARATOR + card2 + this.SEPARATOR;
+		assertEquals(expected, hand.toString());
+	}
+
+	@Test
+	@DisplayName("1.5 Adding a card to a position larger than the current size of the hand")
+	void testAddToPositionException() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE);
+		hand.randomize(5);
+
+		assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+			hand.add(7, new Card());
+			;
+		});
 	}
 
 	@Test

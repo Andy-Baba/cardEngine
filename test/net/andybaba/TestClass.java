@@ -1,4 +1,4 @@
-package com.andybaba;
+package net.andybaba;
 
 import java.time.Duration;
 import java.util.Random;

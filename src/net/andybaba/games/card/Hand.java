@@ -1,11 +1,11 @@
-package com.andybaba.games.card;
+package net.andybaba.games.card;
 
 /**
  * <h2>Interface Hand</h2> Interface for hand, it is expected that the class
  * implementing this interface should create a hand with a specific number of
  * slots for <b>{@code Card}s</b> to be added later
  * 
- * @version 1.0.0
+ * @version 1.1.0
  * @since Dec 13 2018
  * @author Andy
  * @see Iterable
@@ -48,12 +48,16 @@ public interface Hand extends Iterable<Card> {
 			throws ArrayIndexOutOfBoundsException, IllegalArgumentException, UnsupportedOperationException;
 
 	/**
-	 * Adds the given card to the hand
+	 * Adds the given card to the hand at the specified <i>position</i>
 	 * 
-	 * @param card the <b>{@link Card}</b> to be added to the hand
+	 * @param position The position in hand to insert the {@link Card}
+	 * @param card     the {@link Card} to be added to the hand
 	 * @throws ArrayIndexOutOfBoundsException If the hand does not have any empty
 	 *                                        slots for the given card
 	 */
+	public void add(final int postition, final Card card) throws ArrayIndexOutOfBoundsException;
+
+	/**
 	public void add(final Card card) throws ArrayIndexOutOfBoundsException;
 
 	/**

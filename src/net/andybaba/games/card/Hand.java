@@ -58,10 +58,9 @@ public interface Hand extends Iterable<Card> {
 	public void add(final int postition, final Card card) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	public void add(final Card card) throws ArrayIndexOutOfBoundsException;
-
-	/**
-	 * Shows the <b>{@link Card}</b> at the given <i>position</i>.
+	 * public void add(final Card card) throws ArrayIndexOutOfBoundsException;
+	 * 
+	 * /** Shows the <b>{@link Card}</b> at the given <i>position</i>.
 	 * 
 	 * @param position The position of the card to be shown, <b>the first card is at
 	 *                 position 1</b>

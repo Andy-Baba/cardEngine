@@ -12,7 +12,7 @@ import java.util.Random;
  * A base class for playing cards. It also contains two public <i>enums</i> for
  * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
  * 
- * @version 1.0.0
+ * @version 1.1.0
  * @since Dec 10 2018
  * @author Andy
  * @see Comparable
@@ -64,6 +64,21 @@ public class Card implements Comparable<Card> {
 
 		private Rank(final int value) {
 			this.value = value;
+		}
+
+		/**
+		 * Converts an integer value to its corresponding {@link Card.Rank}.
+		 * 
+		 * @param value The integer to be converted
+		 * @return The corresponding Rank to the passed <i>value</i>
+		 * @throws IllegalArgumentException If the value is negative or larger than
+		 *                                  total number of {@link Card.Rank} elements
+		 */
+		public Rank convertInt(final int value) throws IllegalArgumentException {
+			if (value < 0 || value > values().length)
+				throw new IllegalArgumentException("The value should be and integer between 0 and " + values().length
+						+ "; current value is: " + value);
+			return values()[value];
 		}
 
 		private static final List<Rank> VALUES = Collections.unmodifiableList(Arrays.asList(values()));

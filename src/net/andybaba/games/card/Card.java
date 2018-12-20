@@ -12,7 +12,7 @@ import java.util.Random;
  * A base class for playing cards. It also contains two public <i>enums</i> for
  * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
  * 
- * @version 0.6.0
+ * @version 1.0.0
  * @since Dec 10 2018
  * @author Andy
  * @see Comparable
@@ -71,11 +71,21 @@ public class Card implements Comparable<Card> {
 		/**
 		 * Pseudo random a card rank with default seed
 		 * 
+		 * @param bound The upper bound to randomize
+		 * @return A random <b>{@link Rank}</b>
+		 */
+		public static Rank random(final Rank bound) {
+			Random random = new Random();
+			return VALUES.get(random.nextInt(bound.value));
+		}
+
+		/**
+		 * Pseudo random a card rank with default seed
+		 * 
 		 * @return A random <b>{@link Rank}</b>
 		 */
 		public static Rank random() {
-			Random random = new Random();
-			return VALUES.get(random.nextInt(VALUES.size()));
+			return random(VALUES.get(VALUES.size() - 1));
 		}
 	}
 

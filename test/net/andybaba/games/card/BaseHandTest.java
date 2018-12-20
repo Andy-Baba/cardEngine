@@ -2,6 +2,8 @@ package net.andybaba.games.card;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashMap;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +30,7 @@ public class BaseHandTest extends TestClass {
 	public final int DEFAULT_HAND_SIZE = 10;
 	public final Card MY_CARD = new Card(Card.Rank.Five, Card.Suite.Club); // set my card as 5 of Club
 
-	public final boolean SHOW_HANDS = false;
+	public final boolean SHOW_HANDS = true;
 	private BaseHand hand = new BaseHand(1);
 	private boolean showHands = SHOW_HANDS;
 
@@ -391,4 +393,33 @@ public class BaseHandTest extends TestClass {
 		assertEquals(expected, hand);
 	}
 
+	@Test
+	@DisplayName("16.0 Counting the occurence of each rank in the hand")
+	void testCountSameRanks() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE / 2 + 1);
+		hand.randomize();
+		HashMap<Card.Rank, Integer> expected = new HashMap<Card.Rank, Integer>();
+		for (Card card : hand) {
+			Integer count = expected.get(card.rank);
+			expected.put(card.rank, count == null ? 1 : count + 1);
+		}
+		if (showHands)
+			logger.info(expected.toString());
+		assertEquals(expected, hand.countSameRanks());
+	}
+
+	@Test
+	@DisplayName("17.0 Counting the occurence of each suite in the hand")
+	void testCountSameSuites() {
+		hand = new BaseHand(this.DEFAULT_HAND_SIZE / 2 + 1);
+		hand.randomize();
+		HashMap<Card.Suite, Integer> expected = new HashMap<Card.Suite, Integer>();
+		for (Card card : hand) {
+			Integer count = expected.get(card.suite);
+			expected.put(card.suite, count == null ? 1 : count + 1);
+		}
+		if (showHands)
+			logger.info(expected.toString());
+		assertEquals(expected, hand.countSameSuites());
+	}
 }

@@ -1,7 +1,6 @@
 package net.andybaba.games.card;
 
 import java.time.Duration;
-import java.util.HashMap;
 
 import com.sun.jdi.ObjectCollectedException;
 
@@ -19,7 +18,7 @@ import com.sun.jdi.ObjectCollectedException;
  * values. For more details, make sure to check the list of parameters of Rule
  * class.
  * 
- * @version 0.9.0
+ * @version 1.0.0
  * @since Dec 20 2018
  * @author Andy
  */
@@ -53,53 +52,15 @@ public abstract class Rules {
 		classLock = true;
 	}
 
-	public class HandName {
-		// TODO decide if want to give name
-		protected int value;
-
-		private HandName(final int value) {
-			this.value = value;
-		}
-	}
-
 	/**
 	 * Any rule should define the value of each hand in the game.
 	 * 
 	 * @param hand
 	 * @return The value of the hand
 	 */
-	public abstract int calculateHandValue(Hand hand);
+	public abstract int calculateHandValue(BaseHand hand);
 
 	public abstract void nameTheHand();
-
-	protected final HashMap<Card.Rank, Integer> countSameRanks(Hand hand) {
-		// TODO decide about where this function should be I think may be base hand or
-		// hand would be a better place
-		HashMap<Card.Rank, Integer> result = new HashMap<Card.Rank, Integer>();
-		for (Card card : hand) {
-			Integer count = result.get(card.rank);
-			result.put(card.rank, count == null ? 1 : count++);
-		}
-		return result;
-	}
-
-	/**
-	 * TODO decide about where this function should be I think may be base hand or
-	 * hand would be a better place Specifys the
-	 * 
-	 * @param hand
-	 * @return
-	 */
-	protected final HashMap<Card.Suite, Integer> countSameSuites(Hand hand) {
-		// TODO decide about where this function should be I think may be base hand or
-		// hand would be a better place
-		HashMap<Card.Suite, Integer> result = new HashMap<Card.Suite, Integer>();
-		for (Card card : hand) {
-			Integer count = result.get(card.suite);
-			result.put(card.suite, count == null ? 1 : count++);
-		}
-		return result;
-	}
 
 	/**
 	 * Each card game has a hand with a predefined number of cards. <b>Zero means

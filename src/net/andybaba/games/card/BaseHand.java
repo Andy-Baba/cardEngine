@@ -1,6 +1,7 @@
 package net.andybaba.games.card;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Iterator;
  * A basic class to represent a <b>hand of {@link Card}s</b>. Its essentially a
  * wrapper for {@link ArrayList} Class to represent a hand of card.
  * 
- * @version 0.8.0
+ * @version 1.0.0
  * @since Dec 11 2018
  * @author Andy
  * @see java.util.ArrayList
@@ -269,11 +270,56 @@ public class BaseHand implements Hand {
 	}
 
 	/**
-	 * It sorts the hand based on the {@link Card#getValue()} of the cards.
+	 * It sorts the hand based on the {@link Card#getValue()} of the cards from
+	 * lowest to lowest highest.
 	 */
 	@Override
 	public void sort() {
 		this.hand.sort(Card.BY_VALUE);
+	}
+
+	/**
+	 * It checks the <i>hand</i> and specifies the repetition of each
+	 * {@link Card.Rank} in the hand. Therefore, basically if the size of the
+	 * returned {@linkplain HashMap hash map} is equal to the hand it means each
+	 * rank happened only once in the hand.
+	 * <p>
+	 * Obviously if the number of <{@linkplain Card cards} in the hand is more than
+	 * total number of ranks in a deck there will be repetitions of ranks in the
+	 * hand.
+	 * 
+	 * @return A {@linkplain HashMap hash map} showing the ranks in a hand and their
+	 *         number of occurrences in the hand
+	 */
+	public HashMap<Card.Rank, Integer> countSameRanks() {
+		HashMap<Card.Rank, Integer> result = new HashMap<Card.Rank, Integer>();
+		for (Card card : hand) {
+			Integer count = result.get(card.rank);
+			result.put(card.rank, count == null ? 1 : count + 1);
+		}
+		return result;
+	}
+
+	/**
+	 * It checks the <i>hand</i> and specifies the repetition of each
+	 * {@link Card.Suite} in the hand. Therefore, basically if the size of the
+	 * returned {@linkplain HashMap hash map} is equal to the hand it means each
+	 * rank happened only once in the hand.
+	 * <p>
+	 * Obviously if the number of <{@linkplain Card cards} in the hand is more than
+	 * total number of suites in a deck there will be repetitions of ranks in the
+	 * hand.
+	 * 
+	 * @return A {@linkplain HashMap hash map} showing the ranks in a hand and their
+	 *         number of occurrences in the hand
+	 */
+	public HashMap<Card.Suite, Integer> countSameSuites() {
+		HashMap<Card.Suite, Integer> result = new HashMap<Card.Suite, Integer>();
+		for (Card card : hand) {
+			Integer count = result.get(card.suite);
+			result.put(card.suite, count == null ? 1 : count + 1);
+		}
+		return result;
 	}
 
 }

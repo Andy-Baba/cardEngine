@@ -1,9 +1,6 @@
 package net.andybaba.games.card;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -12,7 +9,7 @@ import java.util.Random;
  * A base class for playing cards. It also contains two public <i>enums</i> for
  * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
  * 
- * @version 1.1.0
+ * @version 1.1.1
  * @since Dec 10 2018
  * @author Andy
  * @see Comparable
@@ -36,8 +33,6 @@ public class Card implements Comparable<Card> {
 			this.value = value;
 		}
 
-		private static final List<Suite> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-
 		/**
 		 * Pseudo random a card suite with default seed
 		 * 
@@ -45,7 +40,7 @@ public class Card implements Comparable<Card> {
 		 */
 		public static Suite random() {
 			Random random = new Random();
-			return VALUES.get(random.nextInt(VALUES.size()));
+			return values()[random.nextInt(values().length)];
 		}
 	}
 
@@ -71,17 +66,16 @@ public class Card implements Comparable<Card> {
 		 * 
 		 * @param value The integer to be converted
 		 * @return The corresponding Rank to the passed <i>value</i>
-		 * @throws IllegalArgumentException If the value is negative or larger than
-		 *                                  total number of {@link Card.Rank} elements
+		 * @throws ArrayIndexOutOfBoundsException If the value is negative or larger
+		 *                                        than total number of {@link Card.Rank}
+		 *                                        elements
 		 */
-		public Rank convertInt(final int value) throws IllegalArgumentException {
-			if (value < 0 || value > values().length)
-				throw new IllegalArgumentException("The value should be and integer between 0 and " + values().length
-						+ "; current value is: " + value);
+		public Rank convertInt(final int value) throws ArrayIndexOutOfBoundsException {
 			return values()[value];
 		}
 
-		private static final List<Rank> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		// private static final List<Rank> VALUES =
+		// Collections.unmodifiableList(Arrays.asList(values()));
 
 		/**
 		 * Pseudo random a card rank with default seed
@@ -91,7 +85,8 @@ public class Card implements Comparable<Card> {
 		 */
 		public static Rank random(final Rank bound) {
 			Random random = new Random();
-			return VALUES.get(random.nextInt(bound.value));
+			return values()[random.nextInt(bound.value)];
+			// return VALUES.get(random.nextInt(bound.value));
 		}
 
 		/**
@@ -100,7 +95,7 @@ public class Card implements Comparable<Card> {
 		 * @return A random <b>{@link Rank}</b>
 		 */
 		public static Rank random() {
-			return random(VALUES.get(VALUES.size() - 1));
+			return random(values()[values().length - 1]);
 		}
 	}
 

@@ -17,7 +17,8 @@ import net.andybaba.games.card.BaseHand;
 import net.andybaba.games.card.Card;
 import net.andybaba.games.card.Card.Rank;
 import net.andybaba.games.card.Card.Suite;
-import net.andybaba.games.card.poker.NoLimitTextasHoldemRules.HandName;
+import net.andybaba.games.card.Rules.HandName;
+import net.andybaba.games.card.poker.NoLimitTextasHoldemRules.HoldemHandName;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NoLimitTextasHoldemRulesTest extends TestClass {
@@ -26,6 +27,13 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 	private boolean showHands;
 	private NoLimitTextasHoldemRules noLimitTextasHoldemRules;
 	private TexasHand hand;
+
+	private int calulateExpectedHandValue(final BaseHand hand, final HoldemHandName expected) {
+		int result = NoLimitTextasHoldemRules.HOLDEM_HAND_MAXVALUE * expected.getOrder();
+		for (Card card : hand)
+			result += card.rank.value;
+		return result;
+	}
 
 	@Override
 	@BeforeAll
@@ -71,8 +79,12 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 			ranks.add(Rank.random());
 		for (Rank rank : ranks)
 			hand.add(new Card(rank, Suite.random()));
-		assertEquals(HandName.HighCard, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
-//		assertEquals(HandName.HighCard, noLimitTextasHoldemRules.calculateHandValue(hand));
+
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.HighCard;
+		assertEquals(expected, actual);
+		System.out.println(calulateExpectedHandValue(hand, expected));
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -89,7 +101,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		for (Rank rank : ranks)
 			hand.add(new Card(rank, Suite.Spade));
 
-		assertEquals(HandName.Pair, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.Pair;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -108,7 +123,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(kicker, Suite.Diamond));
 		hand.add(new Card(pair2, Suite.Spade));
 
-		assertEquals(HandName.TwoPair, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.TwoPair;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -126,7 +144,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 			hand.add(new Card(rank, Suite.Diamond));
 		hand.add(new Card(pair, Suite.Spade));
 
-		assertEquals(HandName.ThreeOfaKind, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.ThreeOfaKind;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -138,7 +159,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ten, Suite.Club));
 		hand.add(new Card(Rank.Queen, Suite.Spade));
 
-		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.Straight;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -150,7 +174,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ace, Suite.Club));
 		hand.add(new Card(Rank.Four, Suite.Spade));
 
-		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.Straight;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -162,7 +189,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ten, Suite.Club));
 		hand.add(new Card(Rank.Queen, Suite.Spade));
 
-		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.Straight;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -176,7 +206,10 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 				continue;
 			}
 		}
-		assertEquals(HandName.Flush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.Flush;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -192,7 +225,11 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(rank2, Suite.Heart));
 		hand.add(new Card(rank1, Suite.Diamond));
 		hand.add(new Card(rank1, Suite.Spade));
-		assertEquals(HandName.FullHouse, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.FullHouse;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -208,7 +245,11 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(rank2, Suite.Heart));
 		hand.add(new Card(rank1, Suite.Diamond));
 		hand.add(new Card(rank1, Suite.Spade));
-		assertEquals(HandName.FourOfaKind, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.FourOfaKind;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -221,7 +262,11 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Jack, suite));
 		hand.add(new Card(Rank.Ten, suite));
 		hand.add(new Card(Rank.Queen, suite));
-		assertEquals(HandName.StreightFlush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.StreightFlush;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
@@ -234,12 +279,16 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Jack, suite));
 		hand.add(new Card(Rank.Ten, suite));
 		hand.add(new Card(Rank.Queen, suite));
-		assertEquals(HandName.StreightFlush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+
+		HandName actual = noLimitTextasHoldemRules.calculateHandValue(hand);
+		HoldemHandName expected = HoldemHandName.StreightFlush;
+		assertEquals(expected, actual);
+		assertEquals(calulateExpectedHandValue(hand, expected), actual.getValue());
 	}
 
 	@Test
 	void testNoLimitTextasHoldemRules() {
-		System.out.print(HandName.convertInt(-1));
+
 		fail("Not yet implemented");
 	}
 

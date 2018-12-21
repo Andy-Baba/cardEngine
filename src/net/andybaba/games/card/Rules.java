@@ -52,7 +52,24 @@ public abstract class Rules {
 		classLock = true;
 	}
 
-	public interface HandName {
+	/**
+	 * Defines the structure of a card fame hand value. It's highly preferable that
+	 * each game <i>Rule</i> class implement an <b>enum</b> out of this interface,
+	 * and specifies the possible valuable hands that each player may has and their
+	 * corresponding value. This interface helps to unify the result of
+	 * {@linkplain Rules#calculateHandValue(BaseHand) calculating} the value of the
+	 * hand.
+	 * <p>
+	 * <b>Notice that in many games to break a the tie between players with the same
+	 * type of hand knowing the value of the hand based on the value of the cards in
+	 * the hand is essential.</b>
+	 * 
+	 * @author andy
+	 * @version 1.0.0
+	 * @since Dec 21 2018
+	 *
+	 */
+	public interface HandValue {
 
 		public int getOrder();
 
@@ -62,13 +79,23 @@ public abstract class Rules {
 
 	}
 
+	public interface Action {
+
+		public int getValue();
+
+	}
+
 	/**
-	 * Any rule should define the value of each hand in the game.
+	 * Any rule should define the value of each hand in the game. This method should
+	 * be implemented in such a way that can determine {@linkplain HandValue the
+	 * real value} of the {@linkplain BaseHand hand} the player is holding.
 	 * 
-	 * @param hand
-	 * @return The value of the hand
+	 * @param hand The hand to be evaluated
+	 * @return The {@linkplain HandValue value} of the give hand
 	 */
-	public abstract HandName calculateHandValue(BaseHand hand);
+	public abstract HandValue calculateHandValue(BaseHand hand);
+
+	public abstract Action decide();
 
 	/**
 	 * Each card game has a hand with a predefined number of cards. <b>Zero means

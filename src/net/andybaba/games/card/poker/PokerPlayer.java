@@ -2,17 +2,16 @@ package net.andybaba.games.card.poker;
 
 import net.andybaba.games.card.BaseHand;
 import net.andybaba.games.card.Player;
+import net.andybaba.games.card.Rules;
 
-public class PokerPlayer implements Player {
-	
+public abstract class PokerPlayer implements Player {
+
 	protected BaseHand hand;
-	
-	
-	public PokerPlayer(final int hand) {
-		
+	protected Rules rules;
+
+	public PokerPlayer(final Rules rules) {
+		this.setRule(rules);
 	}
-	
-	
 
 	@Override
 	public String showHand() {
@@ -46,6 +45,12 @@ public class PokerPlayer implements Player {
 
 	@Override
 	public void action() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setRule(Rules rule) {
 		// TODO Auto-generated method stub
 
 	}

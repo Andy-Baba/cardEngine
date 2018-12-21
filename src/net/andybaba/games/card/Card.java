@@ -9,7 +9,7 @@ import java.util.Random;
  * A base class for playing cards. It also contains two public <i>enums</i> for
  * <b>{@link Suite}</b> and <b>{@link Rank}</b> of the cards.
  * 
- * @version 1.1.1
+ * @version 2.0
  * @since Dec 10 2018
  * @author Andy
  * @see Comparable
@@ -52,8 +52,8 @@ public class Card implements Comparable<Card> {
 	 *
 	 */
 	public enum Rank {
-		Ace(1), Deuce(2), Trey(3), Four(4), Five(5), Six(6), Seven(7), Eight(8), Nine(9), Ten(10), Jack(11), Queen(12),
-		King(13);
+		Deuce(1), Trey(2), Four(3), Five(4), Six(5), Seven(6), Eight(7), Nine(8), Ten(9), Jack(10), Queen(11), King(12),
+		Ace(13);
 
 		public final int value;
 

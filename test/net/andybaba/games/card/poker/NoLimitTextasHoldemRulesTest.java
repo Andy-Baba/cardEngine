@@ -2,6 +2,8 @@ package net.andybaba.games.card.poker;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,29 +66,29 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 	@Test
 	@DisplayName("1.0 High card")
 	void testCalculateHandValueHighCard() {
-		for (int i = 0; i < hand.maxSize(); i++) {
-			try {
-				hand.add(new Card(Rank.random(), Suite.random()));
-			} catch (ArrayStoreException e) {
-				continue;
-			}
-		}
-
-		assertEquals(HandName.HighCard.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		HashSet<Rank> ranks = new HashSet<Rank>();
+		while (ranks.size() < hand.maxSize())
+			ranks.add(Rank.random());
+		for (Rank rank : ranks)
+			hand.add(new Card(rank, Suite.random()));
+		assertEquals(HandName.HighCard, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
 	@DisplayName("1.1 Pair")
 	void testCalculateHandValuePair() {
-		Card.Rank pair = Card.Rank.random();
+		HashSet<Rank> ranks = new HashSet<Rank>();
+		Rank pair = null;
+		while (ranks.size() < hand.maxSize() - 1) {
+			pair = Rank.random();
+			ranks.add(pair);
+		}
 
-		hand.add(new Card(pair, Suite.Club));
-		hand.add(new Card(Rank.Five, Suite.Club));
 		hand.add(new Card(pair, Suite.Heart));
-		hand.add(new Card(Rank.Deuce, Suite.Club));
-		hand.add(new Card(Rank.King, Suite.Spade));
+		for (Rank rank : ranks)
+			hand.add(new Card(rank, Suite.Spade));
 
-		assertEquals(HandName.Pair.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.Pair, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -105,19 +107,25 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(kicker, Suite.Diamond));
 		hand.add(new Card(pair2, Suite.Spade));
 
-		assertEquals(HandName.TwoPair.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.TwoPair, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
 	@DisplayName("1.3 Three of Kind")
 	void testCalculateHandValueThreeOfaKind() {
-		hand.add(new Card(Rank.Ace, Suite.Club));
-		hand.add(new Card(Rank.King, Suite.Club));
-		hand.add(new Card(Rank.Ace, Suite.Heart));
-		hand.add(new Card(Rank.Deuce, Suite.Club));
-		hand.add(new Card(Rank.Ace, Suite.Spade));
+		HashSet<Rank> ranks = new HashSet<Rank>();
+		Rank pair = null;
+		while (ranks.size() < hand.maxSize() - 2) {
+			pair = Rank.random();
+			ranks.add(pair);
+		}
 
-		assertEquals(HandName.ThreeOfaKind.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		hand.add(new Card(pair, Suite.Club));
+		for (Rank rank : ranks)
+			hand.add(new Card(rank, Suite.Diamond));
+		hand.add(new Card(pair, Suite.Spade));
+
+		assertEquals(HandName.ThreeOfaKind, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -129,7 +137,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ten, Suite.Club));
 		hand.add(new Card(Rank.Queen, Suite.Spade));
 
-		assertEquals(HandName.Streight.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -141,7 +149,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ace, Suite.Club));
 		hand.add(new Card(Rank.Four, Suite.Spade));
 
-		assertEquals(HandName.Streight.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -153,7 +161,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(Rank.Ten, Suite.Club));
 		hand.add(new Card(Rank.Queen, Suite.Spade));
 
-		assertEquals(HandName.Streight.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.Streight, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -167,7 +175,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 				continue;
 			}
 		}
-		assertEquals(HandName.Flush.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.Flush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -183,7 +191,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(rank2, Suite.Heart));
 		hand.add(new Card(rank1, Suite.Diamond));
 		hand.add(new Card(rank1, Suite.Spade));
-		assertEquals(HandName.FullHouse.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.FullHouse, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
@@ -199,27 +207,37 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		hand.add(new Card(rank2, Suite.Heart));
 		hand.add(new Card(rank1, Suite.Diamond));
 		hand.add(new Card(rank1, Suite.Spade));
-		assertEquals(HandName.FourOfaKind.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		assertEquals(HandName.FourOfaKind, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
 	@DisplayName("1.10 Streight Flush")
 	void testCalculateHandValueStreightFlush() {
-		Card.Rank rank1 = Card.Rank.random();
-		Card.Rank rank2 = rank1;
-		while (rank1 == rank2)
-			rank2 = Card.Rank.random();
+		Suite suite = Suite.random();
 
-		hand.add(new Card(rank1, Suite.Club));
-		hand.add(new Card(rank1, Suite.Heart));
-		hand.add(new Card(rank2, Suite.Heart));
-		hand.add(new Card(rank1, Suite.Diamond));
-		hand.add(new Card(rank1, Suite.Spade));
-		assertEquals(HandName.StreightFlush.value, noLimitTextasHoldemRules.calculateHandValue(hand));
+		hand.add(new Card(Rank.Nine, suite));
+		hand.add(new Card(Rank.King, suite));
+		hand.add(new Card(Rank.Jack, suite));
+		hand.add(new Card(Rank.Ten, suite));
+		hand.add(new Card(Rank.Queen, suite));
+		assertEquals(HandName.StreightFlush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
 	}
 
 	@Test
-	void testNoLimitTextasHoldemRules()  {
+	@DisplayName("1.11 Royal Streight Flush")
+	void testCalculateHandValueRoyalStreightFlush() {
+		Suite suite = Suite.random();
+
+		hand.add(new Card(Rank.Ace, suite));
+		hand.add(new Card(Rank.King, suite));
+		hand.add(new Card(Rank.Jack, suite));
+		hand.add(new Card(Rank.Ten, suite));
+		hand.add(new Card(Rank.Queen, suite));
+		assertEquals(HandName.StreightFlush, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+	}
+
+	@Test
+	void testNoLimitTextasHoldemRules() {
 		System.out.print(HandName.convertInt(-1));
 		fail("Not yet implemented");
 	}

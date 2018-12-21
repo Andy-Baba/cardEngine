@@ -52,6 +52,7 @@ public abstract class Rules {
 		classLock = true;
 	}
 
+
 	/**
 	 * Any rule should define the value of each hand in the game.
 	 * 

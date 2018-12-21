@@ -72,6 +72,7 @@ class NoLimitTextasHoldemRulesTest extends TestClass {
 		for (Rank rank : ranks)
 			hand.add(new Card(rank, Suite.random()));
 		assertEquals(HandName.HighCard, HandName.convertInt(noLimitTextasHoldemRules.calculateHandValue(hand)));
+//		assertEquals(HandName.HighCard, noLimitTextasHoldemRules.calculateHandValue(hand));
 	}
 
 	@Test

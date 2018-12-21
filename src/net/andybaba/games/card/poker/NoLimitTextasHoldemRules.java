@@ -32,7 +32,7 @@ public final class NoLimitTextasHoldemRules extends Rules {
 	}
 
 	public enum HandName {
-		HighCard(0), Pair(60), TwoPair(2), ThreeOfaKind(3), Streight(4), Flush(5), FullHouse(6), FourOfaKind(7),
+		HighCard(0), Pair(1), TwoPair(2), ThreeOfaKind(3), Streight(4), Flush(5), FullHouse(6), FourOfaKind(7),
 		StreightFlush(8);
 		public int value;
 
@@ -49,8 +49,8 @@ public final class NoLimitTextasHoldemRules extends Rules {
 
 	@Override
 	public int calculateHandValue(final BaseHand hand) {
-		HashMap<Card.Rank, Integer> sameRanks = hand.countSameRanks();
-		HashMap<Card.Suite, Integer> sameSuites = hand.countSameSuites();
+		final HashMap<Card.Rank, Integer> sameRanks = hand.countSameRanks();
+		final HashMap<Card.Suite, Integer> sameSuites = hand.countSameSuites();
 		if (sameRanks.size() == hand.count()) {
 			HandName temp = this.handName = HandName.HighCard;
 			hand.sort();
@@ -64,9 +64,9 @@ public final class NoLimitTextasHoldemRules extends Rules {
 				if (temp == HandName.Streight)
 					this.handName = HandName.StreightFlush;
 			}
-		} else if (sameRanks.size() == hand.count() - 1) {
+		} else if (sameRanks.size() == (hand.count() - 1)) {
 			this.handName = HandName.Pair;
-		} else if (sameRanks.size() == hand.count() - 2) {
+		} else if (sameRanks.size() == (hand.count() - 2)) {
 			this.handName = HandName.TwoPair;
 			if (sameRanks.containsValue(3))
 				this.handName = HandName.ThreeOfaKind;
@@ -75,11 +75,12 @@ public final class NoLimitTextasHoldemRules extends Rules {
 			if (sameRanks.containsValue(4))
 				this.handName = HandName.FourOfaKind;
 		}
-
+	
 		int handValue = this.handName.value;
 		for (Card card : hand)
 			handValue += card.rank.value;
-		return handValue;
+		return this.handName.value;
+		//return handName;
 	}
 
 	@Override

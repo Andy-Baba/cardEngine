@@ -32,7 +32,7 @@ public final class NoLimitTextasHoldemRules extends Rules {
 	}
 
 	public enum HandName {
-		HighCard(0), Pair(1), TwoPair(2), ThreeOfaKind(3), Streight(4), Flush(5), FullHouse(6), FourOfaKind(7),
+		HighCard(0), Pair(60), TwoPair(2), ThreeOfaKind(3), Streight(4), Flush(5), FullHouse(6), FourOfaKind(7),
 		StreightFlush(8);
 		public int value;
 
@@ -49,29 +49,23 @@ public final class NoLimitTextasHoldemRules extends Rules {
 
 	@Override
 	public int calculateHandValue(final BaseHand hand) {
-
 		HashMap<Card.Rank, Integer> sameRanks = hand.countSameRanks();
 		HashMap<Card.Suite, Integer> sameSuites = hand.countSameSuites();
-
 		if (sameRanks.size() == hand.count()) {
 			HandName temp = this.handName = HandName.HighCard;
 			hand.sort();
 			if (hand.show(hand.count()).rank.value - hand.show(1).rank.value == hand.count() - 1
 					|| (hand.show(hand.count()).rank.value - hand.show(2).rank.value == hand.count() - 2
-							&& hand.show(hand.count()).rank.value == Rank.values().length))
+							&& hand.show(hand.count()).rank.value == Rank.values().length)) {
 				temp = this.handName = HandName.Streight;
-
+			}
 			if (sameSuites.containsValue(hand.count())) {
 				this.handName = HandName.Flush;
 				if (temp == HandName.Streight)
 					this.handName = HandName.StreightFlush;
 			}
-
-		} else if (
-
-		sameRanks.size() == hand.count() - 1) {
+		} else if (sameRanks.size() == hand.count() - 1) {
 			this.handName = HandName.Pair;
-
 		} else if (sameRanks.size() == hand.count() - 2) {
 			this.handName = HandName.TwoPair;
 			if (sameRanks.containsValue(3))
@@ -80,9 +74,12 @@ public final class NoLimitTextasHoldemRules extends Rules {
 			this.handName = HandName.FullHouse;
 			if (sameRanks.containsValue(4))
 				this.handName = HandName.FourOfaKind;
-
 		}
-		return handName.value;
+
+		int handValue = this.handName.value;
+		for (Card card : hand)
+			handValue += card.rank.value;
+		return handValue;
 	}
 
 	@Override

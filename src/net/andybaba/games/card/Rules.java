@@ -18,7 +18,7 @@ import com.sun.jdi.ObjectCollectedException;
  * values. For more details, make sure to check the list of parameters of Rule
  * class.
  * 
- * @version 1.0.0
+ * @version 1.1.0
  * @since Dec 20 2018
  * @author Andy
  */
@@ -52,6 +52,15 @@ public abstract class Rules {
 		classLock = true;
 	}
 
+	public interface HandName {
+
+		public int getOrder();
+
+		public int getValue();
+
+		public void setValue(final int value);
+
+	}
 
 	/**
 	 * Any rule should define the value of each hand in the game.
@@ -59,9 +68,7 @@ public abstract class Rules {
 	 * @param hand
 	 * @return The value of the hand
 	 */
-	public abstract int calculateHandValue(BaseHand hand);
-
-	public abstract void nameTheHand();
+	public abstract HandName calculateHandValue(BaseHand hand);
 
 	/**
 	 * Each card game has a hand with a predefined number of cards. <b>Zero means

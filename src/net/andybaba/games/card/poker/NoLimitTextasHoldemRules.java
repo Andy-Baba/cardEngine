@@ -19,6 +19,8 @@ import net.andybaba.games.card.Card.Rank;
  */
 public final class NoLimitTextasHoldemRules extends Rules {
 
+	public final static int HOLDEM_HAND_MAXVALUE = 69;
+
 	public NoLimitTextasHoldemRules() {
 
 		super.betAmountLimit = 0; // zero for no limit
@@ -31,65 +33,76 @@ public final class NoLimitTextasHoldemRules extends Rules {
 		super.canChangeCards = false;
 	}
 
-	public enum HandName {
-		HighCard(0), Pair(1), TwoPair(2), ThreeOfaKind(3), Streight(4), Flush(5), FullHouse(6), FourOfaKind(7),
-		StreightFlush(8);
-		public int value;
+	public enum HoldemHandName implements HandName {
+		HighCard(0, 0), Pair(1, 0), TwoPair(2, 0), ThreeOfaKind(3, 0), Streight(4, 0), Flush(5, 0), FullHouse(6, 0),
+		FourOfaKind(7, 0), StreightFlush(8, 0);
 
-		private HandName(final int value) {
+		private final int order;
+		private int value;
+
+		private HoldemHandName(final int order, final int value) {
 			this.value = value;
+			this.order = order;
 		}
 
-		public static HandName convertInt(final int value) throws ArrayIndexOutOfBoundsException {
-			return values()[value];
+		public static HoldemHandName convertInt(final int order) throws ArrayIndexOutOfBoundsException {
+			return values()[order];
+		}
+
+		@Override
+		public int getValue() {
+			return this.value;
+		}
+
+		@Override
+		public int getOrder() {
+			return this.order;
+		}
+
+		@Override
+		public void setValue(int value) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 
-	private HandName handName;
-
 	@Override
-	public int calculateHandValue(final BaseHand hand) {
+	public HandName calculateHandValue(final BaseHand hand) {
+		HandName handName;
 		final HashMap<Card.Rank, Integer> sameRanks = hand.countSameRanks();
 		final HashMap<Card.Suite, Integer> sameSuites = hand.countSameSuites();
 		if (sameRanks.size() == hand.count()) {
-			HandName temp = this.handName = HandName.HighCard;
+			HandName temp = handName = HoldemHandName.HighCard;
 			hand.sort();
 			if (hand.show(hand.count()).rank.value - hand.show(1).rank.value == hand.count() - 1
 					|| (hand.show(hand.count()).rank.value - hand.show(2).rank.value == hand.count() - 2
 							&& hand.show(hand.count()).rank.value == Rank.values().length)) {
-				temp = this.handName = HandName.Streight;
+				temp = handName = HoldemHandName.Streight;
 			}
 			if (sameSuites.containsValue(hand.count())) {
-				this.handName = HandName.Flush;
-				if (temp == HandName.Streight)
-					this.handName = HandName.StreightFlush;
+				handName = HoldemHandName.Flush;
+				if (temp == HoldemHandName.Streight)
+					handName = HoldemHandName.StreightFlush;
 			}
 		} else if (sameRanks.size() == (hand.count() - 1)) {
-			this.handName = HandName.Pair;
+			handName = HoldemHandName.Pair;
 		} else if (sameRanks.size() == (hand.count() - 2)) {
-			this.handName = HandName.TwoPair;
+			handName = HoldemHandName.TwoPair;
 			if (sameRanks.containsValue(3))
-				this.handName = HandName.ThreeOfaKind;
+				handName = HoldemHandName.ThreeOfaKind;
 		} else {
-			this.handName = HandName.FullHouse;
+			handName = HoldemHandName.FullHouse;
 			if (sameRanks.containsValue(4))
-				this.handName = HandName.FourOfaKind;
+				handName = HoldemHandName.FourOfaKind;
 		}
-	
-		int handValue = this.handName.value;
-		for (Card card : hand)
+
+		int handValue = handName.getOrder() * HOLDEM_HAND_MAXVALUE;
+		for (Card card : hand) {
 			handValue += card.rank.value;
-		return this.handName.value;
-		//return handName;
-	}
-
-	@Override
-	public void nameTheHand() {
-		// TODO Auto-generated method stub
+		}
+		handName.setValue(handValue);
+		return handName;
 
 	}
 
-	public HandName getHandName() {
-		return this.handName;
-	}
 }
